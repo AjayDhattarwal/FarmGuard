@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -18,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,42 +26,40 @@ import com.ar.farmguard.R
 import com.ar.farmguard.utils.clickWithoutRipple
 
 @Composable
-fun NewsSection(newsList: List<String>, onNewsClick: () -> Unit) {
-    newsList.take(3).forEach { news ->
-        Card(
-            modifier = Modifier
-                .clickWithoutRipple{
-                    onNewsClick()
-                    TODO()
-                }
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-                .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp)),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_article),
-                    contentDescription = "News Icon",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(MaterialTheme.colorScheme.primary, CircleShape)
-                        .padding(8.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = news,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+fun NewsSection(news: String, onNewsClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .clickWithoutRipple{
+                onNewsClick()
+                TODO()
             }
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_article),
+                contentDescription = "News Icon",
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .padding(8.dp),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = news,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -80,6 +76,6 @@ fun NewsTickerPre() {
     )
 
     Column(modifier = Modifier) {
-        NewsSection(newsList = newsList){}
+        NewsSection(newsList.get(0)){}
     }
 }

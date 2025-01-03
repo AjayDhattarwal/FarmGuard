@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -18,27 +19,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ar.farmguard.R
+import coil.compose.rememberAsyncImagePainter
+import com.ar.farmguard.domain.model.WeatherData
 import com.ar.farmguard.utils.clickWithoutRipple
 
 @Composable
-fun WeatherCard(
-    date: String,
-    location: String,
-    temperature: String,
-    subtitle: String,
-    weatherIcon: ImageVector,
-    onClick: () -> Unit = {},
+fun CurrentWeatherCard(
+    modifier: Modifier = Modifier,
+    weatherData: WeatherData,
+    onClick: () -> Unit = {}
 ) {
+
     Card(
-        modifier = Modifier
-            .clickWithoutRipple{
+        modifier = modifier
+            .clickWithoutRipple {
                 onClick()
                 TODO()
             }
@@ -61,7 +57,7 @@ fun WeatherCard(
                 ) {
 
                     Text(
-                        text = "$location , $date",
+                        text = "${weatherData.locationName} , ${weatherData.date}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -70,7 +66,7 @@ fun WeatherCard(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = temperature,
+                        text = "${weatherData.temperature}℃",
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -78,50 +74,58 @@ fun WeatherCard(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = subtitle,
+                        text = "Humidity ${weatherData.humidity}%",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
                 }
+                Spacer(
+                    Modifier
+                        .weight(1f)
+                        .width(1.dp))
 
                 Image(
-                    imageVector = weatherIcon,
+                    painter = rememberAsyncImagePainter(weatherData.image),
                     contentDescription = "Weather Icon",
                     modifier = Modifier
-                        .weight(1f)
                         .size(80.dp)
                         .align(Alignment.CenterVertically)
                 )
+                Spacer(Modifier.width(8.dp))
 
             }
-            HorizontalDivider()
+            weatherData.description?.let {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider()
 
-            Text(
-                text = "No spraying today - it's raining.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
 
         }
 
     }
 }
 
-
 @Preview
 @Composable
 fun WeatherCardPreview() {
     MaterialTheme {
-        WeatherCard(
-            date = "27 Nov 2023",
-            location = "Thuian, Haryana",
-            temperature = "25°C",
-            subtitle = "Rainfall 12 mm",
-            weatherIcon = ImageVector.vectorResource(id = R.drawable.cloudy)
+        CurrentWeatherCard(
+            weatherData = WeatherData(
+                temperature = 25,
+                humidity = 60,
+                description = "Partly cloudy with a chance of rain",
+                locationName = "Thuian, Haryana",
+                date = "28 Nov 2024"
+            )
         )
     }
 }
