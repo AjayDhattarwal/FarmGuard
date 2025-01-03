@@ -90,7 +90,7 @@ fun BottomNavigationBar(
 sealed class BottomNavItem<T>(val obj: T, val unselectedIcon: Int, val selectedIcon: Int,  val label: String) {
     data object Home : BottomNavItem<AppDestination.Home>( AppDestination.Home, R.drawable.ic_home, R.drawable.ic_home_filled,  "Home")
     data object Search : BottomNavItem<AppDestination.Weather>( AppDestination.Weather, R.drawable.ic_weather,R.drawable.ic_weather_filled, "Weather")
-    data object Recognize : BottomNavItem<AppDestination.CropRates>( AppDestination.CropRates, R.drawable.ic_mandi, R.drawable.ic_mandi_filled ,"MandiBhav")
+    data object Recognize : BottomNavItem<AppDestination.MarketPrice>( AppDestination.MarketPrice, R.drawable.ic_mandi, R.drawable.ic_mandi_filled ,"MandiBhav")
     data object Library: BottomNavItem<AppDestination.Insurance>(AppDestination.Insurance, R.drawable.ic_insurance, R.drawable.ic_insurance_filled,"Insurance")
 }
 

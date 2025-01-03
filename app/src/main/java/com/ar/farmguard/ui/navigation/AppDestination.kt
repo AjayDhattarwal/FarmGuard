@@ -10,7 +10,7 @@ sealed class AppDestination {
     data object Weather: AppDestination()
 
     @Serializable
-    data object CropRates: AppDestination()
+    data object MarketPrice: AppDestination()
 
     @Serializable
     data object Insurance: AppDestination()

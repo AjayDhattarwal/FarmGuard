@@ -13,17 +13,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 fun IconButton(
     icon: ImageVector,
     contentDescription : String,
-    tint: Color = MaterialTheme.colorScheme.onPrimary,
+    tint: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     onClick: () -> Unit,
 ) {
 
     androidx.compose.material3.IconButton(
         onClick = onClick,
         colors = IconButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.4f),
-            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-            disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.4f)
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f),
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+            disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.5f)
         )
     ) {
         Icon(

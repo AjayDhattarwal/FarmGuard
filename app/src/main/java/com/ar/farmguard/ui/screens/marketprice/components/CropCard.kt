@@ -1,4 +1,4 @@
-package com.ar.farmguard.ui.screens.croprates.components
+package com.ar.farmguard.ui.screens.marketprice.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border

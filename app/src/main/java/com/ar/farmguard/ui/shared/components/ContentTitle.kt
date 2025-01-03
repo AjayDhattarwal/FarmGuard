@@ -22,10 +22,9 @@ fun ContentTitle(
     style: TextStyle = MaterialTheme.typography.titleMedium,
     titleColor: Color = MaterialTheme.colorScheme.primary,
     space: Dp = 8.dp,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit = {}
 ){
     Column(modifier) {
-        Spacer(Modifier.height(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ){

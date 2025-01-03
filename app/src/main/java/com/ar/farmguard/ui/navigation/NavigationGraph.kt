@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ar.farmguard.ui.screens.home.HomeScreen
+import com.ar.farmguard.ui.screens.marketprice.MarketPrice
 import com.ar.farmguard.ui.screens.weather.WeatherScreen
 
 @Composable
@@ -36,6 +37,10 @@ fun NavigationGraph(){
 
             composable<AppDestination.Weather> {
                 WeatherScreen()
+            }
+
+            composable<AppDestination.MarketPrice> {
+                MarketPrice()
             }
 
         }
