@@ -3,6 +3,8 @@ package com.ar.farmguard.services.insurance.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.ar.farmguard.app.utils.StringType
+import com.ar.farmguard.app.utils.checkType
 import com.ar.farmguard.services.insurance.domain.models.remote.LoginResponse
 import com.ar.farmguard.services.insurance.domain.models.remote.OtpResponse
 import com.ar.farmguard.services.insurance.domain.models.ui.Message
@@ -10,6 +12,7 @@ import com.ar.farmguard.services.insurance.domain.models.ui.MessageKey
 import com.ar.farmguard.services.insurance.domain.models.ui.MessageStatus
 import com.ar.farmguard.services.insurance.domain.repository.AuthRepository
 import com.ar.farmguard.app.utils.deserializeString
+import com.ar.farmguard.services.insurance.domain.models.remote.UserData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
@@ -24,6 +27,13 @@ class LoginViewModel (
 ): ViewModel() {
 
     private val l = Logger.withTag("LoginViewModel")
+
+    private var cookieExists = false
+
+    private val json = Json{
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
 
     private val _captcha = MutableStateFlow("")
     val captcha = _captcha.asStateFlow()
@@ -40,10 +50,25 @@ class LoginViewModel (
     private val _success = MutableStateFlow(false)
     val success = _success.asStateFlow()
 
-
+    private val _isLogin = MutableStateFlow(false)
+    val isLogin = _isLogin.asStateFlow()
 
     init {
-        getCaptcha()
+        checkUserLoginState()
+    }
+
+    fun checkUserLoginState(){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                val response = authRepository.checkLoginState()
+                if(response.first){
+                    l.i{ "checkUserLoginState: ${response.second}"}
+                    _isLogin.value = true
+                }else{
+                    _isLogin.value = false
+                }
+            }
+        }
     }
 
     fun getCaptcha(tryCount: Int = 3){
@@ -53,16 +78,18 @@ class LoginViewModel (
 
                 val captchaResponse = authRepository.getCaptcha()
 
-                _captcha.value = captchaResponse.data
-
                 if (captchaResponse.status) {
                     _captcha.value = captchaResponse.data
-
                 } else {
                     if (tryCount > 0) {
-                        delay(1000)
+                        delay(5000)
                         getCaptcha(tryCount - 1)
                     } else {
+                        _message.value = Message(
+                            key = MessageKey.CAPTCHA_INFO,
+                            string = captchaResponse.error,
+                            status = MessageStatus.ERROR
+                        )
                         l.i{ "getCaptcha: Error fetching captcha: ${captchaResponse.error}"}
                         return@withContext
                     }
@@ -77,56 +104,65 @@ class LoginViewModel (
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 val number = longCheck(phoneNumber)
-                if(number != null){
-                    _isOtpRequested.value = true
-                    val response = authRepository.getOtp(number,captcha)
 
-                    l.i{ "getOtp: ${response}"}
-
-                    if(response.first){
-
-                        val otpResponse =  try{
-                            response.second.deserializeString<OtpResponse>()
-                        } catch (e: Exception){
-                            val json = Json{
-                                ignoreUnknownKeys = true
-                            }
-                            json.decodeFromString<OtpResponse>(response.second)
-                        }
-                        l.i("$otpResponse")
-
-                        if(otpResponse.status){
-                            _message.value = Message(
-                                key = MessageKey.OTP_REQUEST,
-                                string = "Otp Send Successfully",
-                                status = MessageStatus.SUCCESS
-                            )
-                            _isOtpRequested.value = true
-                        }else{
-                            _message.value = Message(
-                                key = MessageKey.OTP_REQUEST,
-                                string = otpResponse.error,
-                                status = MessageStatus.ERROR
-                            )
-                            _isOtpRequested.value = false
-                        }
-
-                    }
-                    else{
-                        _message.value = Message(
-                            key = MessageKey.OTP_REQUEST,
-                            string = response.second,
-                            status = MessageStatus.ERROR
-                        )
-                        _isOtpRequested.value = false
-                    }
-                }else{
+                if(number == null) {
                     _message.value = Message(
                         key = MessageKey.MOBILE_NO_INFO,
                         string = "Invalid Mobile Number",
                         status = MessageStatus.ERROR
                     )
+                    return@withContext
                 }
+
+                _isOtpRequested.value = true
+
+                val response = authRepository.getOtp(number,captcha)
+
+                l.i{ "getOtp: ${response}"}
+
+                if(!response.first){
+
+                    _message.value = Message(
+                        key = MessageKey.OTP_REQUEST,
+                        string = response.second,
+                        status = MessageStatus.ERROR
+                    )
+                    _isOtpRequested.value = false
+
+                    return@withContext
+
+                }
+
+                val otpResponse =  try{
+                    val responseType = response.second.checkType()
+                    when(responseType){
+                        StringType.JSON -> json.decodeFromString<OtpResponse>(response.second)
+                        StringType.HEX -> response.second.deserializeString<OtpResponse>()
+                        StringType.STRING -> OtpResponse(error = response.second)
+                    }
+                } catch (e: Exception){
+                    OtpResponse(error ="${e.message}")
+                }
+
+                l.i("$otpResponse")
+
+                if(otpResponse.status){
+                    _message.value = Message(
+                        key = MessageKey.OTP_REQUEST,
+                        string = "Otp Send Successfully",
+                        status = MessageStatus.SUCCESS
+                    )
+                    _isOtpRequested.value = true
+                }else{
+                    _message.value = Message(
+                        key = MessageKey.OTP_REQUEST,
+                        string = otpResponse.error,
+                        status = MessageStatus.ERROR
+                    )
+                    _isOtpRequested.value = false
+                }
+
+
             }
         }
     }
@@ -137,29 +173,48 @@ class LoginViewModel (
                 _isOtpVerifying.value = true
 
                 val pair = authRepository.loginUser(phoneNumber.toLong(), otp.toLong())
+
                 l.i{ "loginUser: ${pair.second}"}
-
-                if(pair.first){
-                    val loginResponse =  try{
-                        Json.decodeFromString<LoginResponse>(pair.second)
-                    } catch (e: Exception){
-                        pair.second.deserializeString<LoginResponse>()
-                    }
-                    l.i("$loginResponse")
-                    _message.value = Message(
-                        key = MessageKey.OTP_INFO,
-                        string = "Otp Verification Success ",
-                        status = MessageStatus.SUCCESS
-                    )
-                }
-
 
                 if(!pair.first){
                     _isOtpVerifying.value = false
-                } else{
-                    _success.value = pair.first
+                    return@withContext
                 }
-                l.i{ "loginUser: ${pair.second}"}
+
+                if(pair.first){
+
+                    val responseType = pair.second.checkType()
+                    val loginResponse = try {
+                        when(responseType){
+                            StringType.JSON -> json.decodeFromString<LoginResponse>(pair.second)
+                            StringType.HEX -> pair.second.deserializeString<LoginResponse>()
+                            else -> LoginResponse(user = UserData(error = pair.second))
+                        }
+                    }catch (e: Exception){
+                        LoginResponse(user = UserData(error = "${e.message}"))
+                    }
+
+                    l.i("$loginResponse")
+
+                    val user = loginResponse.user
+
+                    if(user?.status == true){
+                        _message.value = Message(
+                            key = MessageKey.OTP_INFO,
+                            string = "Otp Verification Success ",
+                            status = MessageStatus.SUCCESS
+                        )
+                    }else{
+                        _message.value = Message(
+                            key = MessageKey.OTP_INFO,
+                            string = user?.error ?: "Otp Verification Failed",
+                            status = MessageStatus.ERROR
+                        )
+                    }
+
+                    _success.value = user?.status == true
+                }
+
             }
         }
 

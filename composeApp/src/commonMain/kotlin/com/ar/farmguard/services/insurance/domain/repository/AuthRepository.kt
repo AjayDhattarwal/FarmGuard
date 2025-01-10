@@ -7,6 +7,8 @@ interface AuthRepository {
 
     suspend fun getCaptcha(): CaptchaResponse
 
+    suspend fun checkLoginState(): Pair<Boolean, String>
+
     suspend fun getOtp(phoneNumber: Long, captcha: String): Pair<Boolean, String>
 
     suspend fun loginUser(phoneNumber: Long, otp: Long): Pair<Boolean, String>

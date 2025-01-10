@@ -13,17 +13,18 @@ androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.7.0"
 junit = "4.13.2"
+kermit = "1.0.0"
 kotlin = "2.1.0"
 ktor = "3.0.3"
-coroutines = "1.9.0"
+coroutines = "1.10.0"
 kotlinxSerializationJson = "1.8.0-RC"
 koin = "4.0.0"
-koinComposeMultiplatform = "1.2.0-Beta4"
+koinComposeMultiplatform = "4.0.0"
 navigationCompose = "2.8.0-alpha10"
 lifecycleViewModel = "2.8.7"
 uiAndroid = "1.7.6"
 coil3-io = "3.0.4"
-
+datastore = "1.1.1"
 ksp = "2.0.20-1.0.24"
 salite = "2.5.0-alpha11"
 room = "2.7.0-alphal1"
@@ -31,6 +32,7 @@ room = "2.7.0-alphal1"
 
 
 [libraries]
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -73,6 +75,9 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3-io" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil3-io" }
 coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3-io" }
+
+datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

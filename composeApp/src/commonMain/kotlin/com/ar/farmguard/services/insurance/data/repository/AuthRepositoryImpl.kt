@@ -1,6 +1,5 @@
 package com.ar.farmguard.services.insurance.data.repository
 
-
 import com.ar.farmguard.services.insurance.data.network.AuthServiceImpl
 import com.ar.farmguard.services.insurance.domain.models.remote.CaptchaResponse
 import com.ar.farmguard.services.insurance.domain.repository.AuthRepository
@@ -15,6 +14,21 @@ import kotlinx.serialization.json.Json
 class AuthRepositoryImpl(
     private val authService: AuthServiceImpl
 ): AuthRepository {
+
+
+    override suspend fun checkLoginState(): Pair<Boolean, String> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val response = authService.fetchLoginState()
+            if(response.status.isSuccess()){
+                Pair(true, response.bodyAsText())
+            }else{
+                Pair(false, response.status.description)
+            }
+        } catch (e: Exception){
+            e.printStackTrace()
+            Pair(false, e.message ?: "exception")
+        }
+    }
 
     override suspend fun getCaptcha(): CaptchaResponse =  withContext(Dispatchers.IO)  {
        return@withContext try {
@@ -69,6 +83,7 @@ class AuthRepositoryImpl(
             Pair(false, e.message ?: "exception" )
         }
     }
+
 
 
 }

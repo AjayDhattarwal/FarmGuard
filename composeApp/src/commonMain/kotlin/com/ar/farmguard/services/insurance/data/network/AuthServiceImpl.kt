@@ -3,6 +3,7 @@ package com.ar.farmguard.services.insurance.data.network
 import com.ar.farmguard.app.utils.BASE_URL
 import com.ar.farmguard.app.utils.CAPTCHA_URL
 import com.ar.farmguard.app.utils.DOMAIN
+import com.ar.farmguard.app.utils.IS_LOGIN_URL
 import com.ar.farmguard.app.utils.LOGIN_OTP_URL
 import com.ar.farmguard.app.utils.LOGIN_WITH_OTP_URL
 import com.ar.farmguard.services.insurance.domain.models.remote.LoginData
@@ -21,14 +22,26 @@ import io.ktor.http.contentType
 
 
 
-//interface AuthService {
-//
-//    suspend fun getOtp(phoneNumber: Long, captcha: String): Result<String, DataError.Remote>
-//}
-
 class AuthServiceImpl(
     private val client: HttpClient
 ){
+
+
+    suspend fun fetchLoginState(): HttpResponse{
+        return client.post(IS_LOGIN_URL){
+            headers {
+                append(HttpHeaders.Accept, "application/json")
+                append(HttpHeaders.AcceptEncoding, "gzip, deflate, br")
+                append(HttpHeaders.AcceptLanguage, "en-US,en;q=0.9")
+                append(HttpHeaders.Connection, "keep-alive")
+                append("deviceType", "Web")
+                append(HttpHeaders.Origin, BASE_URL)
+                append(HttpHeaders.Referrer, BASE_URL)
+            }
+            setBody("")
+        }
+    }
+
     suspend fun getCaptcha(): HttpResponse {
 
         val response = client.get(CAPTCHA_URL) {

@@ -46,7 +46,9 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            
+
+            api(libs.datastore)
+            api(libs.datastore.preferences)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -58,7 +60,7 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
 
-            implementation("co.touchlab:kermit:1.0.0")
+            implementation(libs.kermit)
 
 
         }

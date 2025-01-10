@@ -1,5 +1,6 @@
 package com.ar.farmguard.services.insurance.domain.models.remote
 
+import com.ar.farmguard.services.insurance.data.dto.OtpResponseSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,15 +16,15 @@ data class OtpData(
 )
 
 
-@Serializable
+@Serializable(with = OtpResponseSerializer::class)
 data class OtpResponse(
-    val status: Boolean = true,
+    val status: Boolean = false,
     val error: String = "",
-    val level: String? = null
-//    val data: ResponseOTP,
+    val level: String? = null,
+    val data: String? = null,
 )
 
 @Serializable
-data class ResponseOTP(
-    val otp: String,
+data class ResponseDataOTP(
+    val otp: Int? = null,
 )
