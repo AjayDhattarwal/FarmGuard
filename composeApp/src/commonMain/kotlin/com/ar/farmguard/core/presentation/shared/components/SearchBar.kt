@@ -41,14 +41,16 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SearchField(
+    value: () -> String,
     modifier: Modifier = Modifier,
     leadingIcon: @Composable () -> Unit = {},
     trailingIcon: @Composable () -> Unit = {},
     placeholder: String = "Search or type crop",
-    onSearch: (String) -> Unit,
+    onSearch: (String) -> Unit = {},
+    onValueChange: (String) -> Unit,
 ) {
 
-    var query by remember { mutableStateOf("") }
+
     var isFocused by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
@@ -75,10 +77,9 @@ fun SearchField(
                 contentAlignment = Alignment.CenterStart
             ){
                 BasicTextField(
-                    value = query,
+                    value = value(),
                     onValueChange = {
-                        query = it
-                        onSearch(query)
+                        onValueChange(it)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,7 +101,6 @@ fun SearchField(
                     ),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            onSearch(query)
                             focusManager.clearFocus()
                         },
                     ),
@@ -109,7 +109,7 @@ fun SearchField(
                 )
 
 
-                if (query.isEmpty() ) {
+                if (value().isEmpty() ) {
                     Text(
                         text = placeholder,
                         style = MaterialTheme.typography.bodyMedium,
@@ -122,10 +122,10 @@ fun SearchField(
             }
 
 
-            if (query.isNotEmpty() && isFocused) {
+            if (value().isNotEmpty() && isFocused) {
                 IconButton(
                     onClick = {
-                        query = ""
+                       onValueChange("")
                     },
                     modifier = Modifier.size(20.dp),
                 ) {
@@ -145,33 +145,15 @@ fun SearchField(
 
 @Composable
 fun AnimatedSearchBar(
-    onSearch: (String) -> Unit,
+    value: () -> String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     lazyState: LazyListState
 ){
 
     SearchField(
-        onSearch = onSearch,
-        placeholder = "Search or type crop",
-        trailingIcon = {
-            IconButton(
-                onClick = {}
-            ){
-                Icon(
-                    imageVector = vectorResource(Res.drawable.ic_mic),
-                    contentDescription = "mic"
-                )
-            }
-        }
-    )
-}
-
-
-@Preview
-@Composable
-fun SearchFieldPreview(){
-    SearchField(
-        onSearch = {},
+        value = value,
+        onValueChange = onValueChange,
         placeholder = "Search or type crop",
         trailingIcon = {
             IconButton(

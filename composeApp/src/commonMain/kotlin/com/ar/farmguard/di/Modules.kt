@@ -12,6 +12,11 @@ import com.ar.farmguard.services.insurance.auth.signup.viewmodel.FarmerViewModel
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.app.presentation.theme.PlatformViewModel
 import com.ar.farmguard.app.utils.TestViewmodel
+import com.ar.farmguard.marketprice.data.network.EnamMandiApiImpl
+import com.ar.farmguard.marketprice.data.repository.EnamMandiRepositoryImpl
+import com.ar.farmguard.marketprice.domain.network.EnamMandiApi
+import com.ar.farmguard.marketprice.domain.repository.EnamMandiRepository
+import com.ar.farmguard.marketprice.presentation.MarketPriceViewModel
 import com.ar.farmguard.services.insurance.calculator.data.network.PremiumCalculatorApi
 import com.ar.farmguard.services.insurance.calculator.data.repository.PremiumCalculatorRepositoryImpl
 import com.ar.farmguard.services.insurance.calculator.domain.repository.PremiumCalculatorRepository
@@ -36,12 +41,19 @@ val sharedModule = module {
     }
 
     singleOf(::PlatformImpl)
+
     singleOf(::AuthService)
     singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
+
     singleOf(::PremiumCalculatorApi)
     singleOf(::PremiumCalculatorRepositoryImpl).bind<PremiumCalculatorRepository>()
+
     singleOf(::ApplicationStatusRepositoryImpl).bind<ApplicationStatusRepository>()
     singleOf(::ApplicationStatusApiImpl).bind<ApplicationStatusApi>()
+
+    singleOf(::EnamMandiApiImpl).bind<EnamMandiApi>()
+    singleOf(::EnamMandiRepositoryImpl).bind<EnamMandiRepository>()
+
 
     viewModel { PlatformViewModel(get()) }
     viewModel { TestViewmodel(get()) }
@@ -52,4 +64,5 @@ val sharedModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { PremiumCalculatorViewModel(get()) }
     viewModel { ApplicationStatusViewModel(get()) }
+    viewModel { MarketPriceViewModel(get()) }
 }

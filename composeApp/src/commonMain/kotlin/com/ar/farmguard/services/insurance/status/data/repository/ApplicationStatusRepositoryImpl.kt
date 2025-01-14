@@ -2,33 +2,34 @@ package com.ar.farmguard.services.insurance.status.data.repository
 
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
+import com.ar.farmguard.core.domain.map
 import com.ar.farmguard.core.domain.onError
 import com.ar.farmguard.core.domain.onSuccess
 import com.ar.farmguard.services.insurance.auth.domain.models.remote.CaptchaResponse
 import com.ar.farmguard.services.insurance.status.data.network.ApplicationStatusApiImpl
 import com.ar.farmguard.services.insurance.status.domain.models.ApplicationStatusResponse
+import com.ar.farmguard.services.insurance.status.domain.network.ApplicationStatusApi
 import com.ar.farmguard.services.insurance.status.domain.repository.ApplicationStatusRepository
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.json.Json
 
 class ApplicationStatusRepositoryImpl(
-    private val api: ApplicationStatusApiImpl
+    private val api: ApplicationStatusApi
 ): ApplicationStatusRepository {
 
 
     override suspend fun getCaptcha(): Result<ByteArray, DataError.Remote> {
-        var captchaResponse: CaptchaResponse? = null
 
-        api.getCaptcha().onSuccess {
-            captchaResponse = Json.decodeFromString(it.decodeToString())
-        } .onError {
-            captchaResponse = CaptchaResponse(status = false, error = "Something Went Wrong", data = "")
-        }
 
-        return if(captchaResponse?.data?.isNotEmpty() == true){
-            Result.Success(captchaResponse!!.data.toByteArray())
-        }else{
-            Result.Error(DataError.Remote.UNKNOWN)
+        return  api.getCaptcha().map {
+
+            val captchaResponse: CaptchaResponse  = Json.decodeFromString(it.decodeToString())
+
+            if(captchaResponse.data.isNotEmpty()){
+                captchaResponse.data.toByteArray()
+            }else{
+                byteArrayOf()
+            }
         }
     }
 

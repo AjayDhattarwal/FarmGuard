@@ -7,7 +7,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.statement.readRawBytes
-import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +24,7 @@ class TestViewmodel(
     fun decrypt(){
         try{
             viewModelScope.launch {
-                val response = httpClient.get("${IMG_BASE_URL}clear-day.svg"){
+                val response = httpClient.get("${IMG_BASE_URL_WEATHER}/clear-day.svg"){
                     headers{
                         append(HttpHeaders.ContentType, "image/svg+xml")
                     }

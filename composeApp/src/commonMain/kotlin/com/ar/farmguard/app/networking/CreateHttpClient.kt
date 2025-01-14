@@ -5,12 +5,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ar.farmguard.app.utils.COOKIE_KEY
-import com.ar.farmguard.app.utils.DOMAIN
+import com.ar.farmguard.app.utils.INSURANCE_DOMAIN
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.logging.LogLevel
@@ -54,7 +53,7 @@ object HttpClientFactory {
             install(HttpCookies) {
                 storage =     object : CookiesStorage {
                     override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
-                        if (requestUrl.host == DOMAIN) {
+                        if (requestUrl.host == INSURANCE_DOMAIN) {
                             savedCookie = cookie
                             saveCookie(dataStore, cookieToString(cookie))
 
@@ -62,7 +61,7 @@ object HttpClientFactory {
                     }
 
                     override suspend fun get(requestUrl: Url): List<Cookie> {
-                        return if (requestUrl.host == DOMAIN) {
+                        return if (requestUrl.host == INSURANCE_DOMAIN) {
 
                             val cookieString = savedCookie ?: getCookie(dataStore)?.parseToCookie()
                             savedCookie = cookieString

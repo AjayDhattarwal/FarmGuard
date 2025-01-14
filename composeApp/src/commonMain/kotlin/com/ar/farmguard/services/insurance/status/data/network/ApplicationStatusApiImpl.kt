@@ -2,7 +2,7 @@ package com.ar.farmguard.services.insurance.status.data.network
 
 import com.ar.farmguard.app.utils.APPLICATION_STATUS
 import com.ar.farmguard.app.utils.CAPTCHA_URL
-import com.ar.farmguard.app.utils.DOMAIN
+import com.ar.farmguard.app.utils.INSURANCE_DOMAIN
 import com.ar.farmguard.core.data.safeCall
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
@@ -26,7 +26,7 @@ class ApplicationStatusApiImpl(
             val response = httpClient.get(CAPTCHA_URL){
                 headers {
                     append(HttpHeaders.Accept, "image/svg+xml")
-                    append(HttpHeaders.Host, DOMAIN)
+                    append(HttpHeaders.Host, INSURANCE_DOMAIN)
                 }
             }
             Result.Success(response.readRawBytes())

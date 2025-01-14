@@ -13,5 +13,4 @@ interface ApplicationStatusApi {
         captcha: String
     ): Result<ApplicationStatusResponse, DataError.Remote>
 
-
 }

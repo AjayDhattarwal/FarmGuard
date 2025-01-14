@@ -1,8 +1,7 @@
 package com.ar.farmguard.services.insurance.auth.data.network
 
-import com.ar.farmguard.app.utils.BASE_URL
 import com.ar.farmguard.app.utils.CAPTCHA_URL
-import com.ar.farmguard.app.utils.DOMAIN
+import com.ar.farmguard.app.utils.INSURANCE_DOMAIN
 import com.ar.farmguard.app.utils.IS_LOGIN_URL
 import com.ar.farmguard.app.utils.LOGIN_OTP_URL
 import com.ar.farmguard.app.utils.LOGIN_WITH_OTP_URL
@@ -20,7 +19,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
-import io.ktor.http.Cookie
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 
@@ -47,7 +45,7 @@ class AuthService(
         val response = client.get(CAPTCHA_URL) {
             headers {
                 append(HttpHeaders.Accept, "image/svg+xml")
-                append(HttpHeaders.Host, DOMAIN)
+                append(HttpHeaders.Host, INSURANCE_DOMAIN)
             }
         }
         return response

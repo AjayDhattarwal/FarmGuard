@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -27,11 +29,17 @@ import com.ar.farmguard.core.presentation.shared.components.AnimatedSearchBar
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.shared.components.IconThemeButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MarketPrice(){
+fun MarketPrice(
+    priceViewModel: MarketPriceViewModel = koinViewModel()
+){
 
-    val state = rememberLazyListState()
+    val lazyColumnState = rememberLazyListState()
+
+    val state by priceViewModel.state.collectAsState()
+    val searchQuery by priceViewModel.searchQuery.collectAsState()
 
     val list = getList()
 
@@ -39,7 +47,7 @@ fun MarketPrice(){
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 16.dp),
-            state = state,
+            state = lazyColumnState,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item{
@@ -60,23 +68,28 @@ fun MarketPrice(){
 
             item {
                 AnimatedSearchBar(
-                    onSearch = {},
-                    lazyState = state  // for future
+                    value =  {searchQuery},
+                    onValueChange = priceViewModel::updateSearchQuery,
+                    lazyState = lazyColumnState  // for future
                 )
             }
 
 
 
-            items(list, key = { crop -> crop.id}){ crop ->
+            items(state.commodityWithHistory, key = { crop -> crop.commodity }){ commodity ->
+
                 Spacer(Modifier.height(8.dp))
+
+                val todayData = commodity.tradeData.first()
+
                 CropCard(
-                    imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjbmEswGo92XLT45FPzdIeqTy95f-GsO1jQFCsUjsaV5V-H_Gm2rV8zaEGJ7alEFRzpTMf7hCkV67oh2q4SkTCf2emwGx4kQBzukX-PfFwZ9XC1F-tOHJD1rvqGxlXHjPbari8a-TA71eLqCgkJhKdNxHoKNgwgAzqpsjJkrsNDmZUjLjJQoORJcLgC0E4/s200/PlaygroundImage4.heic",
-                    cropName = crop.name,
-                    price = "₹${crop.price} / QTL",
-                    marketName = crop.name,
+                    imageUrl = commodity.image,
+                    cropName = commodity.commodity,
+                    price = "₹${todayData.maxPrice} / QTL",
+                    marketName = todayData.apmc,
                     isPinned = false,
-                    priceColor = Color(crop.priceColor),
-                    priceThread = crop.priceThread
+                    priceColor = Color(commodity.priceColor),
+                    priceThread = commodity.currentPriceThread
                 )
 
             }
