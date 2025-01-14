@@ -10,6 +10,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.logging.LogLevel
@@ -51,14 +52,11 @@ object HttpClientFactory {
                 level = LogLevel.ALL
             }
             install(HttpCookies) {
-                storage = object : CookiesStorage {
+                storage =     object : CookiesStorage {
                     override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
-                        if (requestUrl.host == DOMAIN && (savedCookie == null)) {
-
-                            if(getCookie(dataStore) == null) {
-                                savedCookie = cookie
-                                saveCookie(dataStore, cookieToString(cookie))
-                            }
+                        if (requestUrl.host == DOMAIN) {
+                            savedCookie = cookie
+                            saveCookie(dataStore, cookieToString(cookie))
 
                         }
                     }
@@ -81,6 +79,8 @@ object HttpClientFactory {
             }
         }
     }
+
+
 
 
     private suspend fun getCookie(dataStore: DataStore<Preferences>): String? {

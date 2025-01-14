@@ -45,27 +45,33 @@ fun VerticalGridLayout(
             maxWidth = itemWidth
         )
 
-        val placeable = measures.map { it.measure(itemConstraints) }
-        val rows = (placeable.size + columns - 1) / columns
+        val placeables = measures.map { it.measure(itemConstraints) }
+        val rowHeights = IntArray((placeables.size + columns - 1) / columns) { 0 }
 
-        val gridHeight =
-            topPadding + bottomPadding + rows * itemWidth + (rows - 1) * verticalSpacingPx
+        placeables.forEachIndexed { index, placeable ->
+            val row = index / columns
+            rowHeights[row] = maxOf(rowHeights[row], placeable.height)
+        }
+
+        val gridHeight = topPadding + bottomPadding + rowHeights.sum() +
+                (rowHeights.size - 1) * verticalSpacingPx
 
         layout(constraints.maxWidth, gridHeight) {
-            placeable.forEachIndexed { index, placeable ->
+            var yOffset = topPadding
+            placeables.forEachIndexed { index, placeable ->
                 val row = index / columns
                 val column = index % columns
 
-                val x = leftPadding + column * (itemWidth + horizontalSpacingPx)
-                val y = topPadding + row * (placeable.height + verticalSpacingPx)
+                if (column == 0 && index != 0) {
+                    yOffset += rowHeights[row - 1] + verticalSpacingPx
+                }
 
-                placeable.place(x, y)
+                val x = leftPadding + column * (itemWidth + horizontalSpacingPx)
+                placeable.place(x, yOffset)
             }
         }
     }
 }
-
-
 
 interface GridScope {
     fun item(content: @Composable () -> Unit)

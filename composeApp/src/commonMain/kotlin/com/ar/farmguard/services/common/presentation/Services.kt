@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.ar.farmguard.services.common.presentation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,8 +23,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ar.farmguard.app.presentation.navigation.ServiceDestination
-import com.ar.farmguard.app.presentation.navigation.SubGraph
+import com.ar.farmguard.core.presentation.navigation.ServiceDestination
+import com.ar.farmguard.core.presentation.navigation.SubGraph
 import com.ar.farmguard.services.common.presentation.components.ServiceCard
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.shared.components.IconThemeButton
@@ -32,6 +37,8 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun Services(
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     navigate: (Any) -> Unit
 ) {
 

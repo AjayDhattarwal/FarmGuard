@@ -30,12 +30,12 @@ class FarmGuardController(
         navController.navigateUp()
     }
 
-    fun navigate(route: Any, from: NavBackStackEntry) {
-        if (from.lifecycleIsResumed()) {
-            navController.navigate(route){
-            }
-        }
-    }
+//    fun navigate(route: Any, from: NavBackStackEntry) {
+//        if (from.lifecycleIsResumed()) {
+//            navController.navigate(route){
+//            }
+//        }
+//    }
 
     fun navigate(route: Any){
         navController.navigate(route)

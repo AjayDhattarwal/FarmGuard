@@ -1,6 +1,5 @@
 package com.ar.farmguard.weather.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
 import com.ar.farmguard.weather.domain.models.WeatherData
 import com.ar.farmguard.core.presentation.shared.components.ContentCard
 
@@ -26,7 +25,6 @@ fun CurrentWeatherCard(
     weatherData: WeatherData,
     onClick: () -> Unit = {}
 ) {
-
     ContentCard(
         modifier = modifier,
         onClick = onClick,
@@ -74,13 +72,14 @@ fun CurrentWeatherCard(
                         .width(1.dp)
                 )
 
-                Image(
-                    painter = rememberAsyncImagePainter(weatherData.image),
-                    contentDescription = "Weather Icon",
+                AsyncImage(
+                    model = weatherData.image,
                     modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.CenterVertically)
+                        .size(90.dp)
+                        .align(Alignment.CenterVertically),
+                    contentDescription = "Weather Icon"
                 )
+
                 Spacer(Modifier.width(8.dp))
 
             }

@@ -44,9 +44,6 @@ fun HomeScreen(
 
     val userName by remember{ mutableStateOf("Ajay Singh") }
 
-    LaunchedEffect(Unit){
-        viewmodel.decrypt()
-    }
 
     Surface {
         LazyColumn(

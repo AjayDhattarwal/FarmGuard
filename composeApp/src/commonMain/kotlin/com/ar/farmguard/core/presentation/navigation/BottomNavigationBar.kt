@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.ar.farmguard.core.presentation.navigation.SubGraph
 import farmguard.composeapp.generated.resources.Res
 import farmguard.composeapp.generated.resources.ic_handshake
 import farmguard.composeapp.generated.resources.ic_handshake_filled
@@ -28,7 +29,6 @@ import farmguard.composeapp.generated.resources.ic_weather
 import farmguard.composeapp.generated.resources.ic_weather_filled
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.reflect.KClass
 
 @Composable
 fun BottomNavigationBar(

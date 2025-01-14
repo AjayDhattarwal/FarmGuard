@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
             api(libs.koin.core)
             implementation(libs.bundles.koinbundle)
@@ -118,6 +119,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.foundation.layout.android)
     debugImplementation(compose.uiTooling)
 }
 

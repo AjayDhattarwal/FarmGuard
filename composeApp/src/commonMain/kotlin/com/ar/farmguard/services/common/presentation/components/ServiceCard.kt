@@ -28,13 +28,20 @@ import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ServiceCard(title: String, description: String, icon: ImageVector, onClick: () -> Unit) {
+fun ServiceCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String,
+    icon: ImageVector,
+    onClick: () -> Unit = {},
+    buttonText: String = "Explore"
+) {
     
     ContentCard(
         onClick = onClick
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = modifier.padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.Start
         ) {
@@ -51,7 +58,7 @@ fun ServiceCard(title: String, description: String, icon: ImageVector, onClick: 
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.inverseSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -80,7 +87,7 @@ fun ServiceCard(title: String, description: String, icon: ImageVector, onClick: 
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Explore",
+                    text = buttonText,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )

@@ -1,4 +1,4 @@
-package com.ar.farmguard.app.presentation.navigation
+package com.ar.farmguard.core.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -9,12 +9,6 @@ sealed class SubGraph {
 
     @Serializable
     data object Settings : SubGraph()
-
-    @Serializable
-    data object SignUp : SubGraph()
-
-    @Serializable
-    data object Login : SubGraph()
 
     @Serializable
     data object Weather : SubGraph()
@@ -65,6 +59,7 @@ sealed class MarketDestination {
 
 }
 
+
 sealed class ServiceDestination{
 
     @Serializable
@@ -81,4 +76,29 @@ sealed class ServiceDestination{
 
     @Serializable
     data object Feedback: ServiceDestination()
+
+    @Serializable
+    data object InsuranceCalculator: ServiceDestination()
+
+    @Serializable
+    data object ApplicationStatus: ServiceDestination()
+
+    @Serializable
+    data object ApplyInsurance: ServiceDestination()
+
+    @Serializable
+    data object Applications: ServiceDestination()
+
+    @Serializable
+    data object SignUp : ServiceDestination()
+
+    @Serializable
+    data class Login(
+        val destination: String = TargetKey.SERVICES.toString()
+    ) : ServiceDestination()
+}
+
+@Serializable
+enum class TargetKey {
+    HOME,APPLICATIONS,APPLY_INSURANCE,SERVICES
 }

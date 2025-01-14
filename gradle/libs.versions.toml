@@ -28,6 +28,7 @@ datastore = "1.1.1"
 ksp = "2.0.20-1.0.24"
 salite = "2.5.0-alpha11"
 room = "2.7.0-alphal1"
+foundationLayoutAndroid = "1.7.1"
 
 
 
@@ -78,6 +79,7 @@ coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3-io" }
 
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

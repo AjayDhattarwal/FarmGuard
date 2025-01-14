@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="request_timeout_error">Request timeout error</string>
+    <string name="unauthorized_error">Unauthorized error</string>
+    <string name="conflict_error">Conflict error</string>
+    <string name="too_many_requests_error">Too many requests error</string>
+    <string name="no_internet_error">No internet connection</string>
+    <string name="payload_too_large_error">Payload too large error</string>
+    <string name="server_error">Server error try After some Time</string>
+    <string name="serialization_error">Serialization error</string>
+    <string name="unknown_remote_error">Unknown remote error</string>
+    <string name="disk_full_error">Disk full error</string>
+    <string name="unknown_local_error">Unknown local error</string>
+    <string name="unknown_error">Unknown error</string>
+
+</resources>
