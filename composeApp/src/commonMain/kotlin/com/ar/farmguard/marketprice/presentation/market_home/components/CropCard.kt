@@ -1,4 +1,4 @@
-package com.ar.farmguard.marketprice.presentation.components
+package com.ar.farmguard.marketprice.presentation.market_home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
@@ -38,11 +39,13 @@ fun CropCard(
     marketName: String,
     isPinned: Boolean,
     priceThread: String,
-    priceColor: Color
+    priceColor: Color,
+    onCardClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        onClick = onCardClick,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
@@ -54,6 +57,7 @@ fun CropCard(
             Image(
                 painter = rememberAsyncImagePainter(imageUrl),
                 contentDescription = "Crop Image",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
@@ -109,18 +113,4 @@ fun CropCard(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun CropCardPrev(){
-    CropCard(
-        imageUrl = "https://example.com/image.jpg",
-        cropName = "Wheat",
-        price = "₹100 / QTL",
-        marketName = "Market Name",
-        isPinned = true,
-        priceColor = Color(0xFF1E8805),
-        priceThread = " +₹20 (+13.33%)"
-    )
 }

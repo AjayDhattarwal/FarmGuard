@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TradeDataResponse(
-    val data: List<TradeData> = emptyList(),
+    val data: List<CommodityTransaction> = emptyList(),
     val status: Long? = 200,
 )

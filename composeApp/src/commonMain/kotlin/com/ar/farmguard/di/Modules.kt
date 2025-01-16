@@ -16,7 +16,8 @@ import com.ar.farmguard.marketprice.data.network.EnamMandiApiImpl
 import com.ar.farmguard.marketprice.data.repository.EnamMandiRepositoryImpl
 import com.ar.farmguard.marketprice.domain.network.EnamMandiApi
 import com.ar.farmguard.marketprice.domain.repository.EnamMandiRepository
-import com.ar.farmguard.marketprice.presentation.MarketPriceViewModel
+import com.ar.farmguard.marketprice.presentation.SharedCommodityViewModel
+import com.ar.farmguard.marketprice.presentation.market_home.MarketCommodityViewModel
 import com.ar.farmguard.services.insurance.calculator.data.network.PremiumCalculatorApi
 import com.ar.farmguard.services.insurance.calculator.data.repository.PremiumCalculatorRepositoryImpl
 import com.ar.farmguard.services.insurance.calculator.domain.repository.PremiumCalculatorRepository
@@ -64,5 +65,6 @@ val sharedModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { PremiumCalculatorViewModel(get()) }
     viewModel { ApplicationStatusViewModel(get()) }
-    viewModel { MarketPriceViewModel(get()) }
+    viewModel { SharedCommodityViewModel() }
+    viewModel { MarketCommodityViewModel(get(), get()) }
 }

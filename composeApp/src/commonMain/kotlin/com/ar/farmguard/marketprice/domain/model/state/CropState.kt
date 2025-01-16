@@ -1,4 +1,4 @@
-package com.ar.farmguard.marketprice.domain.model
+package com.ar.farmguard.marketprice.domain.model.state
 
 data class CropState(
     val id: String,

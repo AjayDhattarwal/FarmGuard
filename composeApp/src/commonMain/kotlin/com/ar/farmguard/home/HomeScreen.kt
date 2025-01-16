@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.weather.domain.models.WeatherData
-import com.ar.farmguard.marketprice.presentation.components.CropCard
+import com.ar.farmguard.marketprice.presentation.market_home.components.CropCard
 import com.ar.farmguard.home.components.HomeTopBar
 import com.ar.farmguard.home.components.NewsSection
 import com.ar.farmguard.weather.presentation.components.CurrentWeatherCard

@@ -4,17 +4,17 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TradeData(
+data class CommodityTransaction(
     val id: String,
     val state: String,
     val apmc: String,
     val commodity: String,
     @SerialName("min_price")
-    val minPrice: String,
+    val minPrice: Double,
     @SerialName("modal_price")
-    val modalPrice: String,
+    val modalPrice: Double,
     @SerialName("max_price")
-    val maxPrice: String,
+    val maxPrice: Double,
     @SerialName("commodity_arrivals")
     val commodityArrivals: String,
     @SerialName("commodity_traded")

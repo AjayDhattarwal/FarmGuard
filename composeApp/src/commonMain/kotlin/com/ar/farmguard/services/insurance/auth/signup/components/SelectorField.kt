@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SelectorField(
-    options: List<String>,  // text // key
+    options: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
     placeholder: String,
@@ -112,5 +112,6 @@ fun SelectorField(
 
 
 }
+
 
 

@@ -57,6 +57,12 @@ sealed class MarketDestination {
     @Serializable
     data object MarketPrice : MarketDestination()
 
+    @Serializable
+    data class CommodityDetails(
+        val commodity: String,
+        val id: String,
+    ) : MarketDestination()
+
 }
 
 

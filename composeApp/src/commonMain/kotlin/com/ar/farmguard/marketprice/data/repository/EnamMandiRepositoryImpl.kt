@@ -5,9 +5,12 @@ import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
 import com.ar.farmguard.core.domain.map
 import com.ar.farmguard.core.presentation.parseDate
-import com.ar.farmguard.marketprice.domain.model.CommodityState
-import com.ar.farmguard.marketprice.domain.model.remote.TradeData
+import com.ar.farmguard.marketprice.domain.model.remote.EnamApmc
+import com.ar.farmguard.marketprice.domain.model.remote.EnamState
+import com.ar.farmguard.marketprice.domain.model.state.CommodityState
+import com.ar.farmguard.marketprice.domain.model.remote.CommodityTransaction
 import com.ar.farmguard.marketprice.domain.model.remote.TradeDataRequest
+import com.ar.farmguard.marketprice.domain.model.state.toTradeReport
 import com.ar.farmguard.marketprice.domain.network.EnamMandiApi
 import com.ar.farmguard.marketprice.domain.repository.EnamMandiRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,55 +25,128 @@ class EnamMandiRepositoryImpl(
 ): EnamMandiRepository {
 
     override suspend fun getTradeList(tradeDataRequest: TradeDataRequest): Result< List<CommodityState>?, DataError.Remote> {
+        val liveTrade = getLiveTradeList(tradeDataRequest)
         return api.getTradeList(tradeDataRequest).map {
             if(it.status == 200L){
-                groupTradeDataByCommodity(it.data, tradeDataRequest.apmcName)
+                groupTradeDataByCommodity(it.data, tradeDataRequest.apmcName, liveTrade)
             }else{
                 null
             }
         }
     }
 
-    private suspend fun groupTradeDataByCommodity(tradeDataList: List<TradeData>, apmcName: String): List<CommodityState> = withContext(Dispatchers.IO) {
-        val groupedData = tradeDataList
+    override suspend fun getStateData(): Result<EnamState, DataError.Remote> {
+        return api.getStateData()
+    }
+
+    override suspend fun getApmcData(stateId: String): Result<EnamApmc, DataError.Remote> {
+        return api.getApmcData(stateId)
+    }
+
+    override suspend fun getLiveTradeList(tradeDataRequest: TradeDataRequest): Result<List<CommodityTransaction>, DataError> {
+        return api.getLiveTradeList(tradeDataRequest).map {
+            if( it.status == 200L){
+                it.data.filter { transaction ->
+                    transaction.apmc == tradeDataRequest.apmcName
+                }
+            }else{
+               emptyList()
+            }
+        }
+    }
+
+
+
+
+
+    private suspend fun groupTradeDataByCommodity(
+        commodityTransactionList: List<CommodityTransaction>,
+        apmcName: String,
+        liveTradeList: Result<List<CommodityTransaction>, DataError>
+    ): List<CommodityState> = withContext(Dispatchers.IO) {
+
+        val liveTrade = when(liveTradeList){
+            is Result.Success -> liveTradeList.data
+            is Result.Error -> emptyList()
+        }
+
+        val liveTradeMap =  commodityTransactionList + liveTrade
+
+        var minPriceInHistory = Double.NEGATIVE_INFINITY
+        var maxPriceInHistory = Double.POSITIVE_INFINITY
+
+        val groupedData = liveTradeMap
             .groupBy { it.commodity }
             .map { (commodity, trades) ->
                 async {
                     CommodityState(
-                        apmc = apmcName,
-                        commodity = commodity,
+                        apmc = apmcName.lowercase().replaceFirstChar {
+                            it.uppercase()
+                        },
+                        commodity = commodity.lowercase().replaceFirstChar {
+                            it.uppercase()
+                        },
                         image = "$IMG_BASE_URL_CROPS/$commodity.jpg",
-                        tradeData = trades.sortedByDescending {
+
+                        tradeData = trades.map{
+                            val max = it.maxPrice
+                            val min = it.minPrice
+                            if (max > maxPriceInHistory) {
+                                maxPriceInHistory = max
+                            }
+                            if (min < minPriceInHistory) {
+                                minPriceInHistory = min
+                            }
+
+                            it.toTradeReport()
+                        }.sortedByDescending {
                             parseDate(it.createdAt)
+                        }.distinctBy {
+                            it.createdAt
                         }
                     )
                 }
             }
 
+
         val newData = groupedData.awaitAll().map { commodityState ->
             async {
 
-                val prices = commodityState.tradeData.mapNotNull {
-                    it.maxPrice.toDoubleOrNull()
+                val prices = commodityState.tradeData.map {
+                    it.maxPrice
                 }
 
                 val priceThreads = calculatePriceChange(prices)
 
-                if(priceThreads.isNotEmpty()){
 
-                    val firstThread = priceThreads.first()
+                if (priceThreads.isNotEmpty()) {
+
+                    val paddedPriceThreads =
+                        priceThreads + List(commodityState.tradeData.size - priceThreads.size) { 0.0f }
+
+                    val firstThread = paddedPriceThreads.first()
+
+                    val tradeReport =
+                        commodityState.tradeData.zip(paddedPriceThreads) { trade, priceThread ->
+                            trade.copy(
+                                priceThread = priceThread,
+                                priceColor = if (priceThread > 0) 0xFF1E8805.toInt() else 0xFFB00020.toInt()
+                            )
+                        }
 
                     commodityState.copy(
-                        priceColor = if (firstThread > 0 ) 0xFF1E8805.toInt() else 0xFFB00020.toInt(),
+                        priceColor = if (firstThread > 0) 0xFF1E8805.toInt() else 0xFFB00020.toInt(),
                         currentPriceThread = if (firstThread > 0) "+${firstThread}%" else "${firstThread}%",
-                        priceThreads = priceThreads,
+                        priceThreads = paddedPriceThreads,
+                        tradeData = tradeReport,
+                        maxPriceInHistory = maxPriceInHistory,
+                        minPriceInHistory = minPriceInHistory
                     )
-                }
-                else{
+                } else {
                     commodityState.copy(
-                        priceColor = 0xFF1E8805.toInt() ,
+                        priceColor = 0xFF1E8805.toInt(),
                         currentPriceThread = "+00.00%",
-                        priceThreads = priceThreads
+                        priceThreads = emptyList()
                     )
                 }
 
@@ -81,8 +157,8 @@ class EnamMandiRepositoryImpl(
     }
 
     private suspend inline fun calculatePriceChange(prices: List<Double>): List<Float> = withContext(Dispatchers.IO) {
-        val previousPrices = prices.dropLast(1)
-        val currentPrices = prices.drop(1)
+        val previousPrices = prices.drop(1)
+        val currentPrices = prices.dropLast(1)
 
         val list = previousPrices.zip(currentPrices) { previous, current ->
             async {

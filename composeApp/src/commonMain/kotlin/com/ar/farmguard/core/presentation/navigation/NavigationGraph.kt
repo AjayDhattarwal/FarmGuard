@@ -1,5 +1,4 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class, ExperimentalSharedTransitionApi::class,
-    ExperimentalSharedTransitionApi::class
+@file:OptIn(ExperimentalSharedTransitionApi::class
 )
 
 package com.ar.farmguard.core.presentation.navigation
@@ -11,22 +10,29 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.ar.farmguard.app.presentation.navigation.BottomNavigationBar
 import com.ar.farmguard.app.presentation.navigation.FarmGuardController
 import com.ar.farmguard.app.presentation.navigation.rememberFarmGuardController
 import com.ar.farmguard.home.HomeScreen
-import com.ar.farmguard.marketprice.presentation.MarketPrice
+import com.ar.farmguard.marketprice.presentation.SharedCommodityViewModel
+import com.ar.farmguard.marketprice.presentation.commodity_details.CommodityDetails
+import com.ar.farmguard.marketprice.presentation.market_home.MarketPrice
 import com.ar.farmguard.services.common.presentation.Services
 import com.ar.farmguard.services.insurance.CropInsuranceScreen
 import com.ar.farmguard.services.insurance.auth.login.LoginScreen
@@ -113,11 +119,44 @@ fun NavGraphBuilder.marketGraph(appController: FarmGuardController){
         startDestination = MarketDestination.MarketPrice
     ) {
         composable<MarketDestination.MarketPrice> {
-            MarketPrice()
+            val sharedCommodityViewModel: SharedCommodityViewModel =
+                it.sharedKoinViewModel(appController.navController)
+
+            MarketPrice(
+                navigateToDetails = { destination, commodity ->
+                    sharedCommodityViewModel.setCommodity(commodity)
+                    appController.navigate(destination)
+                }
+            )
+        }
+
+        composable<MarketDestination.CommodityDetails> {
+
+            val commodity = it.toRoute<MarketDestination.CommodityDetails>()
+
+            val sharedCommodityViewModel: SharedCommodityViewModel =
+                it.sharedKoinViewModel(appController.navController)
+
+            val selectedCommodity by sharedCommodityViewModel.selectedCommodity.collectAsStateWithLifecycle()
+
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+                selectedCommodity?.let {
+                    CommodityDetails(
+                        data = it,
+                        navigate = appController::navigate,
+                        onBackPress = appController::upPress
+                    )
+                }
+            }
+
+
         }
     }
 }
 
+@ExperimentalSharedTransitionApi
 fun NavGraphBuilder.servicesGraph(
     appController: FarmGuardController,
     sharedTransitionScope: SharedTransitionScope
