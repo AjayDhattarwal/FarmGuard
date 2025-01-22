@@ -2,10 +2,14 @@ package com.ar.farmguard.core.presentation
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
@@ -40,4 +44,53 @@ fun getDay(data: String) : String{
         todayData.minus(DatePeriod(days = 1)) -> "Yesterday"
         else -> dateInLocalDate.toString()
     }
+}
+
+
+fun getDayOfWeekFromTimestamp(timestamp: Long,): String {
+
+    val localDateTime = timestamp.toTimeStamp()
+
+    val dayOfWeek: DayOfWeek = localDateTime.dayOfWeek
+    println("DayOfWeek: $dayOfWeek")
+
+    return dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }
+}
+
+
+fun formatTimestampToCustomString(timestamp: Long): String {
+    val localDateTime = timestamp.toTimeStamp()
+
+    val customFormat = LocalDateTime.Format{
+        date(
+            LocalDate.Format {
+                dayOfMonth()
+                char(' ')
+                monthName(MonthNames.ENGLISH_ABBREVIATED)
+                chars(" ")
+                year()
+            }
+        )
+    }
+
+    return localDateTime.format(customFormat)
+}
+
+fun shouldRequestNewWeather(lastRequestTimeInSeconds: Long?, difference: Int = 15): Boolean {
+    println("differenceInMinutes: $lastRequestTimeInSeconds")
+    if(lastRequestTimeInSeconds == null){
+        return false
+    }
+
+    val lastRequestTime = Instant.fromEpochSeconds(lastRequestTimeInSeconds)
+
+    val currentTime = Clock.System.now()
+
+    val differenceInMillis = currentTime.toEpochMilliseconds() - lastRequestTime.toEpochMilliseconds()
+
+    val differenceInMinutes = differenceInMillis / (1000 * 60)
+
+    println("differenceInMinutes: $differenceInMinutes")
+
+    return differenceInMinutes >= difference
 }

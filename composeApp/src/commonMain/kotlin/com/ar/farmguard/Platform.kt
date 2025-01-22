@@ -14,10 +14,3 @@ expect class PlatformSpec {
 }
 
 
-class PlatformImpl(
-    private val platformSpec: PlatformSpec,
-) {
-    fun getPlatform(): Platform {
-       return platformSpec.getPlatform()
-    }
-}

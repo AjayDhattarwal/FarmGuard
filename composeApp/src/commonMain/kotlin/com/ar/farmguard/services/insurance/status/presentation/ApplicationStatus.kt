@@ -63,6 +63,8 @@ fun ApplicationStatus(
 
     val message by viewModel.message.collectAsState()
 
+
+
     var showResult by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -93,7 +95,7 @@ fun ApplicationStatus(
                     }
                 },
                 keyboardType = KeyboardType.Number,
-                label = "Area (In hectares) *",
+                label = "policyId *",
                 isError = message?.key == MessageKey.POLICY_STATUS_INFO && message?.status == MessageStatus.ERROR
             )
 

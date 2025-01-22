@@ -1,6 +1,7 @@
 package com.ar.farmguard.app
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.compose.setSingletonImageLoaderFactory
@@ -11,7 +12,12 @@ import coil3.svg.SvgDecoder
 import coil3.util.DebugLogger
 import com.ar.farmguard.core.presentation.navigation.NavigationGraph
 import com.ar.farmguard.app.presentation.theme.FarmGuardTheme
+import com.ar.farmguard.core.presentation.PermissionViewModel
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 @Preview
@@ -20,7 +26,9 @@ fun App() {
         getAsyncImageLoader(context)
     }
     FarmGuardTheme {
+
         NavigationGraph()
+
     }
 }
 

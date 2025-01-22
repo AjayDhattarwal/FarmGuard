@@ -1,9 +1,9 @@
 [versions]
 agp = "8.5.2"
-android-compileSdk = "34"
+android-compileSdk = "35"
 android-minSdk = "24"
-android-targetSdk = "34"
-androidx-activityCompose = "1.9.3"
+android-targetSdk = "35"
+androidx-activityCompose = "1.10.0"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.2.0"
 androidx-core-ktx = "1.15.0"
@@ -15,6 +15,7 @@ compose-multiplatform = "1.7.0"
 junit = "4.13.2"
 kermit = "1.0.0"
 kotlin = "2.1.0"
+kotlinxDatetime = "0.6.1"
 ktor = "3.0.3"
 coroutines = "1.10.0"
 kotlinxSerializationJson = "1.8.0-RC"
@@ -24,11 +25,13 @@ navigationCompose = "2.8.0-alpha10"
 lifecycleViewModel = "2.8.7"
 uiAndroid = "1.7.6"
 coil3-io = "3.0.4"
-datastore = "1.1.1"
+datastore = "1.1.2"
 ksp = "2.0.20-1.0.24"
 salite = "2.5.0-alpha11"
 room = "2.7.0-alphal1"
-foundationLayoutAndroid = "1.7.1"
+foundationLayoutAndroid = "1.7.6"
+moko = "0.18.1"
+playServicesLocation = "21.3.0"
 
 
 
@@ -47,6 +50,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -80,6 +84,10 @@ coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3-io" }
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+
+moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

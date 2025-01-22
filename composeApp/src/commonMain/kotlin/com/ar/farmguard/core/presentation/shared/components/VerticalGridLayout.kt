@@ -38,8 +38,8 @@ fun VerticalGridLayout(
         val verticalSpacingPx = verticalArrangement.spacing.roundToPx()
 
         // Calculate available width for items
-        val availableWidth = constraints.maxWidth - leftPadding - rightPadding
-        val itemWidth = (availableWidth - (columns - 1) * horizontalSpacingPx) / columns
+        val availableWidth = (constraints.maxWidth - leftPadding - rightPadding).coerceAtLeast(0)
+        val itemWidth = (availableWidth - (columns - 1) * horizontalSpacingPx).coerceAtLeast(0) / columns
         val itemConstraints = constraints.copy(
             minWidth = itemWidth,
             maxWidth = itemWidth
@@ -53,8 +53,9 @@ fun VerticalGridLayout(
             rowHeights[row] = maxOf(rowHeights[row], placeable.height)
         }
 
-        val gridHeight = topPadding + bottomPadding + rowHeights.sum() +
-                (rowHeights.size - 1) * verticalSpacingPx
+        // Calculate total height including paddings and spacings
+        val totalGridHeight = rowHeights.sum() + (rowHeights.size - 1) * verticalSpacingPx
+        val gridHeight = (topPadding + totalGridHeight + bottomPadding).coerceAtLeast(0).coerceAtMost(constraints.maxHeight)
 
         layout(constraints.maxWidth, gridHeight) {
             var yOffset = topPadding
@@ -72,6 +73,7 @@ fun VerticalGridLayout(
         }
     }
 }
+
 
 interface GridScope {
     fun item(content: @Composable () -> Unit)

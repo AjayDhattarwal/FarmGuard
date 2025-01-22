@@ -1,4 +1,4 @@
-package com.ar.farmguard.home.components
+package com.ar.farmguard.home.presentation.components
 
 
 import androidx.compose.foundation.Image

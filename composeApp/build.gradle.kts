@@ -53,7 +53,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            implementation(libs.kotlinx.datetime)
 
             api(libs.koin.core)
             implementation(libs.bundles.koinbundle)
@@ -62,6 +62,9 @@ kotlin {
             implementation(libs.bundles.coil)
 
             implementation(libs.kermit)
+            api(libs.moko.permissions)
+            api(libs.moko.permissions.compose)
+            implementation("dev.shreyaspatil.generativeai:generativeai-google:0.9.0-1.0.1-wasm")
 
 
         }
@@ -120,6 +123,7 @@ android {
 dependencies {
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.play.services.location)
     debugImplementation(compose.uiTooling)
 }
 

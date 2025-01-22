@@ -1,6 +1,5 @@
 package com.ar.farmguard.di
 
-import com.ar.farmguard.PlatformImpl
 import com.ar.farmguard.app.networking.HttpClientFactory
 import com.ar.farmguard.services.insurance.auth.data.network.AuthService
 import com.ar.farmguard.services.insurance.auth.domain.repository.AuthRepository
@@ -11,7 +10,7 @@ import com.ar.farmguard.services.insurance.auth.signup.viewmodel.ResidentialView
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.FarmerViewModel
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.app.presentation.theme.PlatformViewModel
-import com.ar.farmguard.app.utils.TestViewmodel
+import com.ar.farmguard.home.HomeViewModel
 import com.ar.farmguard.marketprice.data.network.EnamMandiApiImpl
 import com.ar.farmguard.marketprice.data.repository.EnamMandiRepositoryImpl
 import com.ar.farmguard.marketprice.domain.network.EnamMandiApi
@@ -27,6 +26,11 @@ import com.ar.farmguard.services.insurance.status.data.repository.ApplicationSta
 import com.ar.farmguard.services.insurance.status.domain.network.ApplicationStatusApi
 import com.ar.farmguard.services.insurance.status.domain.repository.ApplicationStatusRepository
 import com.ar.farmguard.services.insurance.status.presentation.ApplicationStatusViewModel
+import com.ar.farmguard.weather.data.network.WeatherApiImpl
+import com.ar.farmguard.weather.data.repository.WeatherRepositoryImpl
+import com.ar.farmguard.weather.domain.network.WeatherApi
+import com.ar.farmguard.weather.domain.repository.WeatherRepository
+import com.ar.farmguard.weather.presentation.WeatherViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
@@ -41,8 +45,6 @@ val sharedModule = module {
         HttpClientFactory.create(get(), get())
     }
 
-    singleOf(::PlatformImpl)
-
     singleOf(::AuthService)
     singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
 
@@ -54,10 +56,12 @@ val sharedModule = module {
 
     singleOf(::EnamMandiApiImpl).bind<EnamMandiApi>()
     singleOf(::EnamMandiRepositoryImpl).bind<EnamMandiRepository>()
+    singleOf(::WeatherApiImpl).bind<WeatherApi>()
+    singleOf(::WeatherRepositoryImpl).bind<WeatherRepository>()
 
 
     viewModel { PlatformViewModel(get()) }
-    viewModel { TestViewmodel(get()) }
+    viewModel { HomeViewModel(get(), get(), get()) }
     viewModel { FarmerViewModel(get()) }
     viewModel { ResidentialViewModel() }
     viewModel { AccountViewModel() }
@@ -67,4 +71,5 @@ val sharedModule = module {
     viewModel { ApplicationStatusViewModel(get()) }
     viewModel { SharedCommodityViewModel() }
     viewModel { MarketCommodityViewModel(get(), get()) }
+    viewModel { WeatherViewModel(get(), get()) }
 }

@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.app.utils.brushBackground
 import com.ar.farmguard.app.utils.clickWithoutRipple
@@ -15,6 +16,7 @@ fun ContentCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     isGradient: Boolean = true,
+    isBlurEffect: Boolean = false,
     content: @Composable () -> Unit
 ){
     Surface(
@@ -27,8 +29,8 @@ fun ContentCard(
     ) {
         Box(
             modifier = Modifier
+                .blur(if(isBlurEffect) 3.dp else 0.dp)
                 .brushBackground(isGradient)
-
         ) {
             content()
         }

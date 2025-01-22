@@ -13,18 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
-import com.ar.farmguard.weather.domain.models.WeatherData
+import coil3.compose.AsyncImage
 import com.ar.farmguard.core.presentation.shared.components.ContentCard
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.ar.farmguard.weather.domain.models.response.forecast.ForecastData
 
 @Composable
 fun WeeklyWeatherCard(
     modifier: Modifier = Modifier,
-    weatherData: WeatherData,
+    forecastData: ForecastData,
     onClick: () -> Unit = {}
 ) {
-
 
     ContentCard(
         modifier = modifier,
@@ -39,16 +37,17 @@ fun WeeklyWeatherCard(
         ) {
 
             Text(
-                text = "${weatherData.day}",
+                text = forecastData.dayOfWeek,
                 style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Image(
-                painter = rememberAsyncImagePainter(weatherData.image),
+            AsyncImage(
+                model = forecastData.day?.image,
                 contentDescription = "Weather Icon",
                 modifier = Modifier
                     .size(70.dp)
@@ -57,7 +56,7 @@ fun WeeklyWeatherCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "${weatherData.temperature}℃",
+                text = "${forecastData.day?.avgTempC?.toInt()}°C",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -65,7 +64,7 @@ fun WeeklyWeatherCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Humidity ${weatherData.humidity}%",
+                text = "Humidity ${forecastData.day?.avgHumidity}%",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -76,17 +75,5 @@ fun WeeklyWeatherCard(
     }
 }
 
-@Preview
-@Composable
-fun WeeklyWeatherCardPrev() {
-    WeeklyWeatherCard(
-        weatherData = WeatherData(
-            temperature = 25,
-            humidity = 60,
-            day = "Tuesday",
-            image = ""
-        ),
-    )
-}
 
 
