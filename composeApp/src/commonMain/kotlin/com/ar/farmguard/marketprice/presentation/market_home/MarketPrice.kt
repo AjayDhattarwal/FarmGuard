@@ -21,6 +21,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,10 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.core.presentation.navigation.MarketDestination
+import com.ar.farmguard.core.presentation.navigation.ServiceDestination
 import com.ar.farmguard.marketprice.presentation.market_home.components.CropCard
 import com.ar.farmguard.core.presentation.shared.components.AnimatedSearchBar
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.shared.components.IconThemeButton
+import com.ar.farmguard.core.presentation.shared.components.IconThemeMenuButton
 import com.ar.farmguard.marketprice.domain.model.state.CommodityState
 import com.ar.farmguard.services.insurance.auth.signup.components.SelectorField
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,7 +45,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MarketPrice(
     marketViewModel: MarketCommodityViewModel = koinViewModel(),
-    navigateToDetails: (Any, CommodityState) -> Unit
+    navigateToDetails: (Any, CommodityState) -> Unit,
+    navigate: (Any) -> Unit,
 ){
 
     val lazyColumnState = rememberLazyListState()
@@ -68,10 +72,14 @@ fun MarketPrice(
                 ContentTitle(
                     title = "Market Price",
                     icon = {
-                        IconThemeButton(
-                            icon = Icons.Default.MoreVert,
-                            contentDescription = "More"
-                        ) { }
+                        IconThemeMenuButton(
+                            dropDownMenuOptions = listOf("Change mandi"),
+                            onMenuItemSelected = { index ->
+                                when(index){
+                                    0 -> marketViewModel.clearData()
+                                }
+                            }
+                        )
                     }
                 )
             }
@@ -88,6 +96,7 @@ fun MarketPrice(
                     }
                 }
             }
+
             else{
 
                 if (state.isUserDataAvailable) {

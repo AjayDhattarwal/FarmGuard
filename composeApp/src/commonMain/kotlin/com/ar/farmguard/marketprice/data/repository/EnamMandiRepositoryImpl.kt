@@ -153,7 +153,7 @@ class EnamMandiRepositoryImpl(
             }
         }
 
-        return@withContext newData.awaitAll()
+        return@withContext newData.awaitAll().sortedBy { it.commodity }
     }
 
     private suspend inline fun calculatePriceChange(prices: List<Double>): List<Float> = withContext(Dispatchers.IO) {

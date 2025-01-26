@@ -124,6 +124,16 @@ class MarketCommodityViewModel (
         _searchQuery.value = query
     }
 
+    fun clearData(){
+        _searchQuery.value = ""
+        _data.value = emptyList()
+        getStateList()
+        _state.value = _state.value.copy(
+            isUserDataAvailable = false
+        )
+
+    }
+
 
     fun saveUserInfo(key: String, value: String){
         viewModelScope.launch {

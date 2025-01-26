@@ -126,7 +126,8 @@ fun NavGraphBuilder.marketGraph(appController: FarmGuardController){
                 navigateToDetails = { destination, commodity ->
                     sharedCommodityViewModel.setCommodity(commodity)
                     appController.navigate(destination)
-                }
+                },
+                navigate = appController::navigate
             )
         }
 

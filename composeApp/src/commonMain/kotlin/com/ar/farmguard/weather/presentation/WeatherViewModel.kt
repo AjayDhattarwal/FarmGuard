@@ -16,6 +16,7 @@ import com.ar.farmguard.weather.domain.models.WeatherState
 import com.ar.farmguard.weather.domain.models.response.CurrentWeather
 import com.ar.farmguard.weather.domain.models.response.LocationInfo
 import com.ar.farmguard.weather.domain.models.response.forecast.ForecastAstro
+import com.ar.farmguard.weather.domain.models.response.forecast.ForecastData
 import com.ar.farmguard.weather.domain.models.response.toGeminiWeatherRequest
 import com.ar.farmguard.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,7 @@ class WeatherViewModel(
             currentWeather = currentWeather?.current ?: CurrentWeather(),
             location = currentWeather?.location ?: LocationInfo(),
             forecast = currentWeather?.forecast?.forecastData?.drop(1) ?: emptyList(),
-            astro = currentWeather?.forecast?.forecastData?.first()?.astro ?: ForecastAstro()
+            currentForecast = currentWeather?.forecast?.forecastData?.first() ?: ForecastData()
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), WeatherState())
 
@@ -90,8 +91,12 @@ class WeatherViewModel(
                                 uiText = it.toUiText(),
                                 status = MessageStatus.ERROR
                             )
+
                             _weatherState.value = _weatherState.value.copy(
                                 message = message
+                            )
+                            _weatherState.value = _weatherState.value.copy(
+                                isLoading = false
                             )
                         }
                     }

@@ -1,8 +1,13 @@
 package com.ar.farmguard.weather.domain.models.response.forecast
 
 import com.ar.farmguard.app.utils.IMG_BASE_URL_WEATHER
+import com.ar.farmguard.app.utils.currentHour
 import com.ar.farmguard.app.utils.weatherImageSelect
+import com.ar.farmguard.core.presentation.getTimeString
+import com.ar.farmguard.core.presentation.toTimeStamp
 import com.ar.farmguard.weather.domain.models.response.Condition
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -46,4 +51,7 @@ class ForecastHour(
 ) {
     val image: String
         get() = weatherImageSelect(condition.icon)
+
+    val timeString: String
+        get() =  timeEpoch.getTimeString()
 }

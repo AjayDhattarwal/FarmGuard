@@ -12,6 +12,9 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 fun Long.toTimeStamp(): LocalDateTime {
     val instant = Instant.fromEpochSeconds(this)
@@ -76,6 +79,21 @@ fun formatTimestampToCustomString(timestamp: Long): String {
     return localDateTime.format(customFormat)
 }
 
+
+fun getCurrentTime(): String {
+    val instant = Clock.System.now()
+    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+    val format = LocalDateTime.Format {
+        amPmHour()
+        char(':')
+        minute()
+        chars(" ")
+        amPmMarker(am = "AM", pm = "PM")
+    }
+    return localDateTime.format(format)
+}
+
+
 fun shouldRequestNewWeather(lastRequestTimeInSeconds: Long?, difference: Int = 15): Boolean {
     println("differenceInMinutes: $lastRequestTimeInSeconds")
     if(lastRequestTimeInSeconds == null){
@@ -93,4 +111,22 @@ fun shouldRequestNewWeather(lastRequestTimeInSeconds: Long?, difference: Int = 1
     println("differenceInMinutes: $differenceInMinutes")
 
     return differenceInMinutes >= difference
+}
+
+inline fun parseTime(time: String, isSun: Boolean = true): Duration {
+    val (hour, minute, amPm) = Regex("(\\d+):(\\d+)\\s*(AM|PM)").find(time)!!.destructured
+    val hour24 = hour.toInt() % 12 + if (amPm == if(isSun) "PM" else "AM") 12 else 0
+    return hour24.hours + minute.toInt().minutes
+}
+
+inline fun Long.getTimeString(): String {
+    val localDateTime = this.toTimeStamp()
+    val format = LocalDateTime.Format {
+        amPmHour()
+        char(':')
+        minute()
+        chars(" ")
+        amPmMarker(am = "AM", pm = "PM")
+    }
+    return localDateTime.format(format)
 }
