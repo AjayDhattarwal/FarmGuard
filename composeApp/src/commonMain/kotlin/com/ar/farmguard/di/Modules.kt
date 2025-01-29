@@ -10,6 +10,7 @@ import com.ar.farmguard.services.insurance.auth.signup.viewmodel.ResidentialView
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.FarmerViewModel
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.app.presentation.theme.PlatformViewModel
+import com.ar.farmguard.core.domain.PaginationManager
 import com.ar.farmguard.home.HomeViewModel
 import com.ar.farmguard.marketprice.data.network.EnamMandiApiImpl
 import com.ar.farmguard.marketprice.data.repository.EnamMandiRepositoryImpl
@@ -26,6 +27,16 @@ import com.ar.farmguard.services.insurance.status.data.repository.ApplicationSta
 import com.ar.farmguard.services.insurance.status.domain.network.ApplicationStatusApi
 import com.ar.farmguard.services.insurance.status.domain.repository.ApplicationStatusRepository
 import com.ar.farmguard.services.insurance.status.presentation.ApplicationStatusViewModel
+import com.ar.farmguard.services.scheme.data.network.SchemeApiImpl
+import com.ar.farmguard.services.scheme.data.network.SchemeDetailsApiImpl
+import com.ar.farmguard.services.scheme.data.repository.SchemeDetailsRepositoryImpl
+import com.ar.farmguard.services.scheme.data.repository.SchemeRepositoryImpl
+import com.ar.farmguard.services.scheme.domain.network.SchemeApi
+import com.ar.farmguard.services.scheme.domain.network.SchemeDetailsApi
+import com.ar.farmguard.services.scheme.domain.repository.SchemeDetailsRepository
+import com.ar.farmguard.services.scheme.domain.repository.SchemeRepository
+import com.ar.farmguard.services.scheme.presentation.SchemeDetailsViewModel
+import com.ar.farmguard.services.scheme.presentation.SchemeViewModel
 import com.ar.farmguard.weather.data.network.WeatherApiImpl
 import com.ar.farmguard.weather.data.repository.WeatherRepositoryImpl
 import com.ar.farmguard.weather.domain.network.WeatherApi
@@ -34,6 +45,7 @@ import com.ar.farmguard.weather.presentation.WeatherViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -44,6 +56,8 @@ val sharedModule = module {
     single {
         HttpClientFactory.create(get(), get())
     }
+
+    single { PaginationManager() }
 
     singleOf(::AuthService)
     singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
@@ -56,20 +70,30 @@ val sharedModule = module {
 
     singleOf(::EnamMandiApiImpl).bind<EnamMandiApi>()
     singleOf(::EnamMandiRepositoryImpl).bind<EnamMandiRepository>()
+
     singleOf(::WeatherApiImpl).bind<WeatherApi>()
     singleOf(::WeatherRepositoryImpl).bind<WeatherRepository>()
 
+    singleOf(::SchemeRepositoryImpl).bind<SchemeRepository>()
+    singleOf(::SchemeApiImpl).bind<SchemeApi>()
 
-    viewModel { PlatformViewModel(get()) }
-    viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { FarmerViewModel(get()) }
-    viewModel { ResidentialViewModel() }
-    viewModel { AccountViewModel() }
-    viewModel { SignUpViewModel() }
-    viewModel { LoginViewModel(get()) }
-    viewModel { PremiumCalculatorViewModel(get()) }
-    viewModel { ApplicationStatusViewModel(get()) }
-    viewModel { SharedCommodityViewModel() }
-    viewModel { MarketCommodityViewModel(get(), get()) }
-    viewModel { WeatherViewModel(get(), get()) }
+    singleOf(::SchemeDetailsApiImpl).bind<SchemeDetailsApi>()
+    singleOf(::SchemeDetailsRepositoryImpl).bind<SchemeDetailsRepository>()
+
+
+    viewModelOf(::PlatformViewModel)
+    viewModelOf(::FarmerViewModel)
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::ResidentialViewModel)
+    viewModelOf(::AccountViewModel)
+    viewModelOf(::SignUpViewModel)
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::PremiumCalculatorViewModel)
+    viewModelOf(::ApplicationStatusViewModel)
+    viewModelOf(::SharedCommodityViewModel)
+    viewModelOf(::MarketCommodityViewModel)
+    viewModelOf(::WeatherViewModel)
+    viewModelOf(::SchemeViewModel)
+    viewModelOf(::SchemeDetailsViewModel)
+
 }

@@ -46,6 +46,8 @@ import com.ar.farmguard.services.insurance.auth.signup.viewmodel.ResidentialView
 import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.services.insurance.calculator.presentation.PremiumCalculator
 import com.ar.farmguard.services.insurance.status.presentation.ApplicationStatus
+import com.ar.farmguard.services.scheme.presentation.SchemeDetails
+import com.ar.farmguard.services.scheme.presentation.SchemeScreen
 import com.ar.farmguard.weather.presentation.WeatherScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -210,6 +212,24 @@ fun NavGraphBuilder.servicesGraph(
         }
 
         composable<ServiceDestination.Applications> {  }
+
+        composable<ServiceDestination.Schemes> {
+            SchemeScreen(
+                onBackPress = appController::upPress,
+                navigate = appController::navigate
+            )
+        }
+
+        composable<ServiceDestination.SchemeDetails> {
+            val id = it.toRoute<ServiceDestination.SchemeDetails>().id
+
+            SchemeDetails(
+                id = id,
+                onBackPress = appController::upPress,
+                navigate = appController::navigate
+            )
+        }
+
 
     }
 }

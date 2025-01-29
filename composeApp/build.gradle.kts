@@ -66,6 +66,7 @@ kotlin {
             api(libs.moko.permissions.compose)
             implementation("dev.shreyaspatil.generativeai:generativeai-google:0.9.0-1.0.1-wasm")
 
+            implementation(libs.paging.compose.common)
 
         }
         iosMain.dependencies {

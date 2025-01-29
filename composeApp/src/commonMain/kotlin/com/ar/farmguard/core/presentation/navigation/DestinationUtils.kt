@@ -78,6 +78,11 @@ sealed class ServiceDestination{
     data object Schemes: ServiceDestination()
 
     @Serializable
+    data class SchemeDetails(
+        val id: String
+    ): ServiceDestination()
+
+    @Serializable
     data object Help: ServiceDestination()
 
     @Serializable

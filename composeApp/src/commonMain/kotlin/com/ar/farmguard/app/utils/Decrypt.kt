@@ -18,16 +18,14 @@ inline fun <reified T> String.deserializeString(): T {
 
     val encryptedData = this.decodeHex().toByteArray()
 
-    val data = getDECKeyIV()
-    val keyBytes = data.first.toByteArray(Charsets.UTF_8)
-    val ivBytes = data.second.toByteArray(Charsets.UTF_8)
+//    val data = getDECKeyIV()
+//    val keyBytes = data.first.toByteArray(Charsets.UTF_8)
+//    val ivBytes = data.second.toByteArray(Charsets.UTF_8)
 
-    println("Encrypted Data: ${data.first},  ${data.second}")
-
+    val keyBytes = DUMMY_KEY.toByteArray(Charsets.UTF_8)
+    val ivBytes = DUMMY_IV.toByteArray(Charsets.UTF_8)
 
     val decryptedString = decryptGcm(encryptedData, keyBytes, ivBytes).trimPadding().decodeToString()
-
-    println("Decrypted String: $decryptedString")
 
     return json.decodeFromString<T>(decryptedString)
 }

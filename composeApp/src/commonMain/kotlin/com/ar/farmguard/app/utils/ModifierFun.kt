@@ -1,8 +1,6 @@
 package com.ar.farmguard.app.utils
 
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -32,12 +30,16 @@ fun Modifier.clickWithoutRipple(onClick: () -> Unit): Modifier = this.then(
 
 
 @Composable
-fun Modifier.brushBackground(isGradient: Boolean = true, color: Color = MaterialTheme.colorScheme.primaryContainer.copy(0.4f)): Modifier {
+fun Modifier.brushBackground(
+    isGradient: Boolean = true,
+    color: Color = MaterialTheme.colorScheme.primaryContainer.copy(0.3f)
+): Modifier {
+
     return this.background(
         brush = Brush.verticalGradient(
             colors = listOf(
                 color,
-                if(!isGradient) color else MaterialTheme.colorScheme.surface
+                if (!isGradient) color else MaterialTheme.colorScheme.surface
             )
         )
     )

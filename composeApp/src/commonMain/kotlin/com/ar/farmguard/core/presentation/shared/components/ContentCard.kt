@@ -7,6 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.app.utils.brushBackground
 import com.ar.farmguard.app.utils.clickWithoutRipple
@@ -17,11 +18,12 @@ fun ContentCard(
     onClick: () -> Unit,
     isGradient: Boolean = true,
     isBlurEffect: Boolean = false,
+    elevation: Dp = 4.dp,
     content: @Composable () -> Unit
 ){
     Surface(
         shape = MaterialTheme.shapes.medium,
-        tonalElevation = 4.dp,
+        tonalElevation = elevation,
         modifier = modifier
             .fillMaxWidth()
             .clickWithoutRipple(onClick = onClick),

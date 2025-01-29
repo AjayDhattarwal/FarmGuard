@@ -32,6 +32,7 @@ room = "2.7.0-alphal1"
 foundationLayoutAndroid = "1.7.6"
 moko = "0.18.1"
 playServicesLocation = "21.3.0"
+paging = "3.3.0-alpha02-0.4.0"
 
 
 
@@ -88,6 +89,9 @@ androidx-foundation-layout-android = { group = "androidx.compose.foundation", na
 moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko" }
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
+
+paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
