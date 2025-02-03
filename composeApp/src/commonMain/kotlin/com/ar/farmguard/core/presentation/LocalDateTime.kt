@@ -13,8 +13,10 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.DurationUnit
 
 fun Long.toTimeStamp(): LocalDateTime {
     val instant = Instant.fromEpochSeconds(this)
@@ -129,4 +131,29 @@ inline fun Long.getTimeString(): String {
         amPmMarker(am = "AM", pm = "PM")
     }
     return localDateTime.format(format)
+}
+
+fun isoToMillis(isoString: String): Long? {
+    return try {
+        val instant = Instant.parse(isoString)
+        instant.toEpochMilliseconds()
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun relativeTime(timestampMillis: String): String {
+    val now = Clock.System.now()
+    val longTimestamp = isoToMillis(timestampMillis) ?: return ""
+    val instant = Instant.fromEpochMilliseconds(longTimestamp)
+    val duration: Duration = now - instant
+
+    return when {
+        duration < 1.minutes -> "Just now"
+        duration < 1.hours -> "${duration.toInt(DurationUnit.MINUTES)}min ago"
+        duration < 24.hours -> "${duration.toInt(DurationUnit.HOURS)}h ago"
+        duration < 48.hours -> "Yesterday"
+        duration < 30.days -> "${duration.toInt(DurationUnit.DAYS)}d ago"
+        else -> "Long ago"
+    }
 }

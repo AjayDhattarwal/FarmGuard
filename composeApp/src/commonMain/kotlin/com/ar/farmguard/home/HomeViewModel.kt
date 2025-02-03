@@ -14,6 +14,7 @@ import com.ar.farmguard.core.domain.onError
 import com.ar.farmguard.core.domain.onSuccess
 import com.ar.farmguard.core.presentation.toUiText
 import com.ar.farmguard.home.domain.model.HomeState
+import com.ar.farmguard.news.domian.repository.NewsRepository
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.Message
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.MessageKey
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.MessageStatus
@@ -34,7 +35,8 @@ import kotlinx.coroutines.flow.stateIn
 class HomeViewModel(
     private val locationProvider: LocationProvider,
     private val dataSore: DataStore<Preferences>,
-    private val weatherRepository: WeatherRepository
+    private val weatherRepository: WeatherRepository,
+    private val newsRepository: NewsRepository
 ) : ViewModel() {
 
     val l = Logger.withTag("HomeViewModel")
@@ -42,6 +44,8 @@ class HomeViewModel(
     private val coordinateKey = stringPreferencesKey(COORDINATES_KEY)
 
     private val currentWeather = weatherRepository.forecast
+
+
 
     private val _homeState = MutableStateFlow(HomeState())
     val homeState = _homeState.combine(currentWeather) { state, currentWeather ->
@@ -57,10 +61,11 @@ class HomeViewModel(
     init {
         if(currentWeather.value == null){
             getWeather()
+            getStateNews("haryana")
         }
     }
 
-    fun getWeather(){
+    private fun getWeather(){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 val location = locationProvider.getCurrentLocation()
@@ -146,6 +151,29 @@ class HomeViewModel(
     private suspend fun getCoordinates(): String? {
         return withContext(Dispatchers.IO){
             dataSore.data.first()[coordinateKey]
+        }
+    }
+
+
+    private fun getStateNews(state: String){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                newsRepository.getStateNews(state = state)
+                    .onSuccess {
+                        _homeState.value = _homeState.value.copy(
+                            stateNews = it
+                        )
+                    }.onError {
+                        _homeState.value = _homeState.value.copy(
+                            message = Message(
+                                key = MessageKey.NEWS_INFO,
+                                uiText = it.toUiText(),
+                                status = MessageStatus.ERROR
+                            )
+                        )
+
+                    }
+            }
         }
     }
 

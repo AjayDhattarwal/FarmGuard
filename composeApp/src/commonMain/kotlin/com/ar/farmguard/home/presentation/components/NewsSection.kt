@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.app.utils.clickWithoutRipple
@@ -27,7 +26,7 @@ import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun NewsSection(news: String, onNewsClick: () -> Unit) {
+fun KeyUpdateItem(news: String, onNewsClick: () -> Unit) {
     Card(
         modifier = Modifier
             .clickWithoutRipple{
@@ -77,6 +76,6 @@ fun NewsTickerPre() {
     )
 
     Column(modifier = Modifier) {
-        NewsSection(newsList.get(0)){}
+        KeyUpdateItem(newsList.get(0)){}
     }
 }

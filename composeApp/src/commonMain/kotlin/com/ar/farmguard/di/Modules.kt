@@ -18,6 +18,10 @@ import com.ar.farmguard.marketprice.domain.network.EnamMandiApi
 import com.ar.farmguard.marketprice.domain.repository.EnamMandiRepository
 import com.ar.farmguard.marketprice.presentation.SharedCommodityViewModel
 import com.ar.farmguard.marketprice.presentation.market_home.MarketCommodityViewModel
+import com.ar.farmguard.news.data.network.NewsApiImpl
+import com.ar.farmguard.news.data.repository.NewsRepositoryImpl
+import com.ar.farmguard.news.domian.network.NewsApi
+import com.ar.farmguard.news.domian.repository.NewsRepository
 import com.ar.farmguard.services.insurance.calculator.data.network.PremiumCalculatorApi
 import com.ar.farmguard.services.insurance.calculator.data.repository.PremiumCalculatorRepositoryImpl
 import com.ar.farmguard.services.insurance.calculator.domain.repository.PremiumCalculatorRepository
@@ -79,6 +83,9 @@ val sharedModule = module {
 
     singleOf(::SchemeDetailsApiImpl).bind<SchemeDetailsApi>()
     singleOf(::SchemeDetailsRepositoryImpl).bind<SchemeDetailsRepository>()
+
+    singleOf(::NewsApiImpl).bind<NewsApi>()
+    singleOf(::NewsRepositoryImpl).bind<NewsRepository>()
 
 
     viewModelOf(::PlatformViewModel)

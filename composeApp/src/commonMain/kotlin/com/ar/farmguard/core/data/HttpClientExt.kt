@@ -8,6 +8,8 @@ import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.readBytes
+import io.ktor.client.statement.readRawBytes
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.serialization.json.Json
 
@@ -15,20 +17,23 @@ suspend inline fun <reified T> responseToResult(
     isDecrypt: Boolean = true,
     tryWithSting: Boolean = false,
     response: HttpResponse,
+    isBrEncoding: Boolean,
 ): Result<T,DataError.Remote> {
     return when(response.status.value){
         in 200..299 -> {
             try {
-
                 if(tryWithSting){
                     val json = Json {
                         ignoreUnknownKeys = true
                         isLenient = true
                     }
-
-                    val responseString = response.bodyAsText()
-
-                    Result.Success(json.decodeFromString<T>(responseString))
+                    try{
+                        Result.Success(response.body<T>())
+                    }catch (e:Exception){
+                        val bytes = response.readRawBytes()
+                        val string = decodeBrotli(bytes)
+                        Result.Success(json.decodeFromString(string))
+                    }
                 }else{
                     Result.Success(response.body<T>())
                 }
@@ -55,7 +60,7 @@ suspend inline fun <reified T> responseToResult(
 }
 
 
-suspend inline fun <reified T> safeCall(isDecrypt: Boolean = true, tryWithSting: Boolean = false,  execute: () -> HttpResponse): Result<T, DataError.Remote> {
+suspend inline fun <reified T> safeCall(isDecrypt: Boolean = true, isBrEncoding: Boolean = false, tryWithSting: Boolean = false,  execute: () -> HttpResponse): Result<T, DataError.Remote> {
     val response = try {
         execute()
     } catch (e: SocketTimeoutException){
@@ -66,5 +71,5 @@ suspend inline fun <reified T> safeCall(isDecrypt: Boolean = true, tryWithSting:
         return Result.Error(DataError.Remote.UNKNOWN)
     }
 
-    return responseToResult( isDecrypt = isDecrypt, tryWithSting = tryWithSting, response)
+    return responseToResult( isDecrypt = isDecrypt, tryWithSting = tryWithSting, response, isBrEncoding = isBrEncoding)
 }

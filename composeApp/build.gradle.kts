@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.cocoapods)
 }
 
 kotlin {
@@ -27,6 +28,21 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
+
+    }
+
+    cocoapods{
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "13.0"
+        podfile = project.file("../iosApp/Podfile")
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+
     }
     
     sourceSets {
@@ -38,6 +54,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation("org.brotli:dec:0.1.2")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

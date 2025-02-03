@@ -4,11 +4,14 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import coil3.util.ServiceLoaderComponentRegistry.register
 import com.ar.farmguard.app.utils.COOKIE_KEY
 import com.ar.farmguard.app.utils.INSURANCE_DOMAIN
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.compression.ContentEncoding
+import io.ktor.client.plugins.compression.ContentEncodingConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -51,7 +54,7 @@ object HttpClientFactory {
                 level = LogLevel.ALL
             }
             install(HttpCookies) {
-                storage =     object : CookiesStorage {
+                storage = object : CookiesStorage {
                     override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
                         if (requestUrl.host == INSURANCE_DOMAIN) {
                             savedCookie = cookie
@@ -76,6 +79,10 @@ object HttpClientFactory {
                     override fun close() {}
                 }
             }
+//            install(ContentEncoding) {
+//                gzip()
+//                deflate()
+//            }
         }
     }
 

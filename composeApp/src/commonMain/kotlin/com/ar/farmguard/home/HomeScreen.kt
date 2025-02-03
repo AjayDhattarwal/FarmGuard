@@ -25,16 +25,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ar.farmguard.marketprice.presentation.market_home.components.CropCard
 import com.ar.farmguard.home.presentation.components.HomeTopBar
-import com.ar.farmguard.home.presentation.components.NewsSection
+import com.ar.farmguard.home.presentation.components.KeyUpdateItem
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.PermissionViewModel
+import com.ar.farmguard.news.presentation.components.NewsSection
 import com.ar.farmguard.weather.presentation.components.CurrentWeatherCard
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 
 @Composable
@@ -79,7 +79,7 @@ fun HomeScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                ,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 
@@ -89,6 +89,7 @@ fun HomeScreen(
 
             item {
                 HomeTopBar(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     userName = userName,
                     profileImageUrl = "https://lh3.googleusercontent.com/a/ACg8ocKzOeHLR6u4PCmEh76OEwRuqybxt7t99S337pJaUKKmu3e3DgA=s576-c-no",
                     onSearchClicked = { },
@@ -99,6 +100,7 @@ fun HomeScreen(
 
             item{
                 ContentTitle(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     title = "Today's Weather"
                 ){
                     Box(contentAlignment = Alignment.Center){
@@ -119,16 +121,18 @@ fun HomeScreen(
 
             item {
                 ContentTitle(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     title = "Key Updates"
                 ) {
                     newsList.forEach {
-                        NewsSection(it) {}
+                        KeyUpdateItem(it) {}
                     }
                 }
             }
 
             item {
                 ContentTitle(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     title = "Mandi Bhav Updates"
                 ) {
                     CropCard(
@@ -141,6 +145,15 @@ fun HomeScreen(
                         priceThread = "+₹20 (+13.33%)"
                     )
                 }
+            }
+
+            item {
+                NewsSection(
+                    newsItems = homeState.stateNews,
+                    title = "State News",
+                    onItemClick = {},
+                    onActionClick = {}
+                )
             }
 
             item { Spacer(Modifier.height(120.dp)) }

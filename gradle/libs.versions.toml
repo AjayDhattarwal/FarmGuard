@@ -33,6 +33,7 @@ foundationLayoutAndroid = "1.7.6"
 moko = "0.18.1"
 playServicesLocation = "21.3.0"
 paging = "3.3.0-alpha02-0.4.0"
+brotliKit-ios = "1.0.2"
 
 
 
@@ -61,6 +62,7 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-auth = { module = "jo.ktor:ktor-client-auth", version.ref = "ktor"}
+ktor-client-content-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
@@ -93,6 +95,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
 
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -100,6 +103,7 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-mu
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+cocoapods = {id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 
 [bundles]
 ktor = [
@@ -107,12 +111,13 @@ ktor = [
     "ktor-client-content-negotiation",
 #    "ktor-client-auth",
     "ktor-client-logging",
+    "ktor-client-content-encoding",
     "ktor-serialization-kotlinx-json",
 ]
 coil = [
     "coil-compose",
     "coil-svg",
-    "coil-gif",
+#    "coil-gif",
     "coil-core",
     "coil-network"
 ]

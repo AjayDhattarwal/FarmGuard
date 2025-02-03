@@ -25,6 +25,13 @@ sealed class SubGraph {
 sealed class HomeDestination {
     @Serializable
     data object Home : HomeDestination()
+
+    @Serializable
+    data class NewsDetails(
+        val id: String,
+        val title: String,
+        val subtitle: String,
+    ) : HomeDestination()
 }
 
 

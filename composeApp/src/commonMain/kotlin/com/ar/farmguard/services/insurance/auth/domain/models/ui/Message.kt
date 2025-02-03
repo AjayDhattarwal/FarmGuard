@@ -37,7 +37,8 @@ enum class MessageKey {
     INVALID_MOBILE_NUMBER,
     SSSY_LIST_INFO,
     MARKET_HOME_INFO,
-    FORECAST_INFO
+    FORECAST_INFO,
+    NEWS_INFO
 
 }
 
