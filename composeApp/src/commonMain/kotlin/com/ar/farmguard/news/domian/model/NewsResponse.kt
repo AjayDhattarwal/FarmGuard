@@ -50,20 +50,28 @@ data class NewsHeader(
     val slug: String? = null,
     val containsVideo: Boolean,
     val media: List<NewsMedia> = emptyList(),
+    val tag: NewsTag? = null,
 )
+
+@Serializable
+data class NewsTag(
+    val text: String,
+    val bgColorStart: String,
+)
+
 
 @Serializable
 data class NewsMedia(
     val type: String,
     val url: String,
-    val size: Size? = null,
+    val size: NewsMediaSize? = null,
     val thumbUrl: String? = null,
     val duration: Long? = null,
     val downloadUrl: String? = null,
 )
 
 @Serializable
-data class Size(
+data class NewsMediaSize(
     val w: Long? = null,
     val h: Long? = null,
 )

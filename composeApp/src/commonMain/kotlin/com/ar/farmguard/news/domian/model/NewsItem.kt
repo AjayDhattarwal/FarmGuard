@@ -15,8 +15,10 @@ data class NewsItem(
     val image: String,
     val timestamp: String,
     val slug: String? = null,
-    val color: String? = null
+    val color: String? = null,
+    val shortUrl: String
 ){
     val relativeTime: String
         get() =  relativeTime(modifiedTime)
+
 }

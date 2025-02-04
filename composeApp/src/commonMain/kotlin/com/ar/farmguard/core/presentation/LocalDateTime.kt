@@ -115,8 +115,8 @@ fun shouldRequestNewWeather(lastRequestTimeInSeconds: Long?, difference: Int = 1
     return differenceInMinutes >= difference
 }
 
-inline fun parseTime(time: String, isSun: Boolean = true): Duration {
-    val (hour, minute, amPm) = Regex("(\\d+):(\\d+)\\s*(AM|PM)").find(time)!!.destructured
+inline fun parseTime(time: String, isSun: Boolean = true): Duration? {
+    val (hour, minute, amPm) = Regex("(\\d+):(\\d+)\\s*(AM|PM)").find(time)?.destructured ?: return null
     val hour24 = hour.toInt() % 12 + if (amPm == if(isSun) "PM" else "AM") 12 else 0
     return hour24.hours + minute.toInt().minutes
 }

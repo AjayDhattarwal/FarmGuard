@@ -39,7 +39,13 @@ fun NewsCard(
             .width(260.dp)
             .height(170.dp)
             .clickWithoutRipple{
-                onClick(HomeDestination.NewsDetails)
+                onClick(
+                    HomeDestination.NewsDetails(
+                        shortTag = newsItem.shortUrl,
+                        title = newsItem.title,
+                        image = newsItem.image
+                    )
+                )
             },
         shape = MaterialTheme.shapes.extraLarge,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

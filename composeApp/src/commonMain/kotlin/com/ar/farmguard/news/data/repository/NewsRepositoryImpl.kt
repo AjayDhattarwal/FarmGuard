@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
 import com.ar.farmguard.core.domain.map
+import com.ar.farmguard.news.domian.model.NewsDetailResponse
 import com.ar.farmguard.news.domian.model.NewsItem
 import com.ar.farmguard.news.domian.network.NewsApi
 import com.ar.farmguard.news.domian.repository.NewsRepository
@@ -21,7 +22,10 @@ class NewsRepositoryImpl(
         val result = newsApi.getStateNews(state).map {
             it.toNewsItemList()
         }
-        l.e("result: $result")
         return result
+    }
+
+    override suspend fun getNewsDetails(shortTag: String): Result<NewsDetailResponse, DataError.Remote> {
+        return newsApi.getNewsDetails(shortTag)
     }
 }

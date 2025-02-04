@@ -29,9 +29,10 @@ fun DrawScope.drawSunPath(
     val color = if(isSun) Color(0xFFFFD700) else Color(0xFFAEAEF8)
     val pathColor = if(isSun) Color(0xFFDFB860) else Color(0xFFAEAEE0)
 
-    val sunriseMinutes = parseTime(riseTime, isSun)
-    val sunsetMinutes = parseTime(setTime, isSun)
-    val currentMinutes = parseTime(currentTime, isSun)
+    val sunriseMinutes = parseTime(riseTime, isSun) ?: return
+    val sunsetMinutes = parseTime(setTime, isSun) ?: return
+    val currentMinutes = parseTime(currentTime, isSun) ?: return
+
 
     val progress = ((currentMinutes - sunriseMinutes).inWholeMinutes.toFloat() /
             (sunsetMinutes - sunriseMinutes).inWholeMinutes.toFloat())

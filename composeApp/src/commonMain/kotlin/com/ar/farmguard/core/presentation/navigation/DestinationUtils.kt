@@ -27,10 +27,13 @@ sealed class HomeDestination {
     data object Home : HomeDestination()
 
     @Serializable
+    data object News: HomeDestination()
+
+    @Serializable
     data class NewsDetails(
-        val id: String,
+        val shortTag: String,
         val title: String,
-        val subtitle: String,
+        val image: String,
     ) : HomeDestination()
 }
 

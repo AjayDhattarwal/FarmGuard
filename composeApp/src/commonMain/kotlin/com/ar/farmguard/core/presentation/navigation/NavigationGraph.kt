@@ -33,6 +33,7 @@ import com.ar.farmguard.home.HomeScreen
 import com.ar.farmguard.marketprice.presentation.SharedCommodityViewModel
 import com.ar.farmguard.marketprice.presentation.commodity_details.CommodityDetails
 import com.ar.farmguard.marketprice.presentation.market_home.MarketPrice
+import com.ar.farmguard.news.presentation.news_details.NewsDetailsScreen
 import com.ar.farmguard.services.common.presentation.Services
 import com.ar.farmguard.services.insurance.CropInsuranceScreen
 import com.ar.farmguard.services.insurance.auth.login.LoginScreen
@@ -99,7 +100,23 @@ fun NavGraphBuilder.homeGraph(appController: FarmGuardController){
         startDestination = HomeDestination.Home
     ) {
         composable<HomeDestination.Home> {
-            HomeScreen()
+            HomeScreen(
+                navigate = appController::navigate
+            )
+        }
+
+        composable<HomeDestination.News> {
+
+        }
+        composable<HomeDestination.NewsDetails> {
+            val news = it.toRoute<HomeDestination.NewsDetails>()
+
+            NewsDetailsScreen(
+                pathData = news,
+                onBackPress = appController::upPress,
+                navigate = appController::navigate
+            )
+
         }
     }
 }

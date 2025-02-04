@@ -33,6 +33,7 @@ fun CelestialRiseAnimation(
 ){
 
     if(riseTime != null && setTime != null){
+        println("sunrise = $riseTime, sunset = $setTime")
         val currentTime = remember { getCurrentTime() }
 
         val animatable = remember { Animatable(initialValue = 0f) }

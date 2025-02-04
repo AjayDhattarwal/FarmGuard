@@ -23,5 +23,6 @@ fun NewsFeed.toNewsItem(): NewsItem{
         categoryId = data.category.id,
         image = data.header.media.firstOrNull()?.url ?: "",
         timestamp = data.publishTime,
+        shortUrl = data.shortUrl.substringAfterLast("/").substringBeforeLast(".html")
     )
 }

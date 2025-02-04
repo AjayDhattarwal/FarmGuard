@@ -33,13 +33,13 @@ import com.ar.farmguard.weather.presentation.components.CurrentWeatherCard
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = koinViewModel()
+    homeViewModel: HomeViewModel = koinViewModel(),
+    navigate: (Any) -> Unit
 ){
 
     val homeState by homeViewModel.homeState.collectAsStateWithLifecycle()
@@ -151,8 +151,8 @@ fun HomeScreen(
                 NewsSection(
                     newsItems = homeState.stateNews,
                     title = "State News",
-                    onItemClick = {},
-                    onActionClick = {}
+                    onItemClick = navigate,
+                    onActionClick = { TODO() }
                 )
             }
 
@@ -161,8 +161,3 @@ fun HomeScreen(
     }
 }
 
-@Preview
-@Composable
-fun HomeScreenPrev(){
-    HomeScreen()
-}
