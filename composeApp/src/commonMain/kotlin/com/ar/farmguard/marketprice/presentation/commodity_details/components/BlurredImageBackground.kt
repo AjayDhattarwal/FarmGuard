@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.ar.farmguard.marketprice.presentation.commodity_details.components
 
 import androidx.compose.foundation.Image
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,9 +23,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,24 +39,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.ar.farmguard.core.presentation.shared.components.IconThemeButton
 
 @Composable
 fun BlurredImageBackground(
     imageUrl: String?,
-    isPinned: Boolean,
-    onPinnedClick: () -> Unit,
     onBackClick: () -> Unit,
+    isWithSubImage: Boolean = true,
     modifier: Modifier = Modifier,
-    titleContent: @Composable ColumnScope.() -> Unit,
+    titleContent: @Composable ColumnScope.() -> Unit = {},
     content: @Composable () -> Unit
 ) {
     var imageLoadResult by remember {
@@ -77,123 +82,115 @@ fun BlurredImageBackground(
         }
     )
 
-
-    Box(modifier = modifier) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(0.3f)
-                    .fillMaxWidth()
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = "crop cover",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer {
-                            alpha =   1 -  (scrollState.value.toFloat() / 400f)
-                        }
-                        .blur(10.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconThemeButton(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "goBack",
+                        value = {scrollState.value.toFloat()},
+                        onClick = onBackClick,
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
                 )
-
-                Box(
-                    modifier.fillMaxSize()
-                        .drawBehind {
-                            drawRect(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        backgroundColor.copy(0.3f),
-                                        backgroundColor
-                                    ),
-                                    startY = 0f,
-                                    endY = size.height
-                                )
-                            )
-
-                        }
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .weight(0.7f)
-                    .fillMaxWidth()
             )
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .align(Alignment.TopCenter)
-        )
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-                .verticalScroll(scrollState)
-        ) {
-            Spacer(modifier = Modifier.height(100.dp))
-
-            Row (
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(modifier = modifier) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-                ElevatedCard(
+                Box(
                     modifier = Modifier
-                        .height(200.dp)
-                        .aspectRatio(2f / 3f),
-                    shape = RoundedCornerShape(8.dp),
-                    elevation = CardDefaults.elevatedCardElevation(
-                        defaultElevation = 6.dp
-                    )
+                        .fillMaxHeight(0.3f)
+                        .fillMaxWidth()
                 ) {
                     Image(
                         painter = painter,
                         contentDescription = "crop cover",
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.Transparent),
-                        contentScale = ContentScale.Crop
+                            .graphicsLayer {
+                                alpha =   1 -  (scrollState.value.toFloat() / 400f)
+                            }
+                            .blur(10.dp)
                     )
-                }
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    titleContent()
+
+                    Box(
+                        modifier.fillMaxSize()
+                            .drawBehind {
+                                drawRect(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            if(isWithSubImage) backgroundColor.copy(0.3f) else Color.Transparent,
+                                            backgroundColor
+                                        ),
+                                        startY = 0f,
+                                        endY = size.height
+                                    )
+                                )
+
+                            }
+                    )
                 }
             }
 
-            content()
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .align(Alignment.TopCenter)
+            )
 
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 8.dp, start = 6.dp)
-                .statusBarsPadding()
-        ) {
-            Box(contentAlignment = Alignment.Center){
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .graphicsLayer {
-                            alpha =    (scrollState.value.toFloat() / 400f)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+                    .verticalScroll(scrollState)
+            ) {
+
+                if(isWithSubImage){
+                    Spacer(modifier = Modifier.height(100.dp))
+                    Row (
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .height(200.dp)
+                                .aspectRatio(2f / 3f),
+                            shape = RoundedCornerShape(8.dp),
+                            elevation = CardDefaults.elevatedCardElevation(
+                                defaultElevation = 6.dp
+                            )
+                        ) {
+                            Image(
+                                painter = painter,
+                                contentDescription = "crop cover",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Transparent),
+                                contentScale = ContentScale.Crop
+                            )
                         }
-                        .background(MaterialTheme.colorScheme.surface.copy(0.7f))
-                )
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            titleContent()
+                        }
+                    }
+                }else{
+                    Spacer(modifier = Modifier.height(130.dp))
+                }
 
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "go back",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                content()
+
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import com.ar.farmguard.news.domian.model.NewsItem
 @Composable
 fun NewsCard(
     newsItem: NewsItem,
+    scaleImg: Float,
     onClick: (Any) -> Unit = {}
 ) {
     Card(
@@ -56,6 +58,10 @@ fun NewsCard(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = scaleImg
+                        scaleY = scaleImg
+                    }
             )
 
             Box(

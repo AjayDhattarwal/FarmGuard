@@ -48,14 +48,27 @@ fun Modifier.brushBackground(
 
 @Composable
 fun Modifier.loadingEffect(
-    showShimmer: () -> Boolean = { true }, targetValue: Float = 1000f, duration: Int = 2000
+    showShimmer: () -> Boolean = { true },
+    targetValue: Float = 1000f,
+    duration: Int = 2000,
+    showBackground: Boolean = true
 ): Modifier {
-    val shimmerColors = listOf(
-        Color.White.copy(alpha = 0.4f),
-         Color(0x1462BA),
-        Color(0xEA7DA2).copy(0.2f),
-        Color.White.copy(alpha = 0.4f),
-    )
+
+    val shimmerColors = if(showBackground){
+        listOf(
+            Color.White.copy(alpha = 0.4f),
+            Color(0x1462BA),
+            Color(0xEA7DA2).copy(0.2f),
+            Color.White.copy(alpha = 0.4f),
+        )
+    }else{
+        listOf(
+            Color.Transparent,
+            Color(0x1462BA),
+            Color.White.copy(0.7f),
+            Color.Transparent,
+        )
+    }
     val transition = rememberInfiniteTransition(label = "")
 
     val translateAnimation by transition.animateFloat(
@@ -68,7 +81,7 @@ fun Modifier.loadingEffect(
 
     return drawWithCache {
         onDrawBehind {
-            if(showShimmer()){
+            if (showShimmer()) {
                 drawRect(
                     brush = Brush.linearGradient(
                         colors = shimmerColors,

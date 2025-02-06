@@ -8,14 +8,17 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
+import kotlinx.datetime.toDateTimePeriod
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.parseIsoString
 import kotlin.time.DurationUnit
 
 fun Long.toTimeStamp(): LocalDateTime {
@@ -52,7 +55,7 @@ fun getDay(data: String) : String{
 }
 
 
-fun getDayOfWeekFromTimestamp(timestamp: Long,): String {
+fun getDayOfWeekFromTimestamp(timestamp: Long): String {
 
     val localDateTime = timestamp.toTimeStamp()
 
@@ -155,5 +158,31 @@ fun relativeTime(timestampMillis: String): String {
         duration < 48.hours -> "Yesterday"
         duration < 30.days -> "${duration.toInt(DurationUnit.DAYS)}d ago"
         else -> "Long ago"
+    }
+}
+
+
+fun formatDateTimeFromString(dateTimeString: String): String? {
+    val formatter = LocalDateTime.Format {
+        monthName(MonthNames.ENGLISH_FULL)
+        char(' ')
+        dayOfMonth()
+        chars(", ")
+        year()
+        char(' ')
+        hour()
+        char(':')
+        minute()
+        char(' ')
+        amPmMarker(am = "AM", pm = "PM")
+
+
+    }
+    return try {
+        val isoTime = Instant.parse(dateTimeString).toLocalDateTime(TimeZone.currentSystemDefault())
+        isoTime.format(formatter)
+    } catch (e: Exception) {
+        println("Error parsing or formatting date/time: ${e.message}")
+        null
     }
 }

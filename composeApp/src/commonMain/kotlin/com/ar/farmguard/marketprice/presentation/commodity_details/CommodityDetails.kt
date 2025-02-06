@@ -44,11 +44,9 @@ fun CommodityDetails(
 
     var selectedGraphType by remember { mutableStateOf(GraphTypes.MAX) }
 
-    Scaffold {
+
         BlurredImageBackground(
             imageUrl = data.image,
-            isPinned = false,
-            onPinnedClick = {},
             onBackClick = onBackPress,
             modifier = Modifier,
             titleContent = {
@@ -180,7 +178,7 @@ fun CommodityDetails(
             }
 
         }
-    }
+
 
 }
 

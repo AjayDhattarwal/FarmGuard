@@ -16,8 +16,9 @@ import com.ar.farmguard.news.domian.model.NewsItem
 fun NewsSection(
     newsItems: List<NewsItem>,
     title: String,
-    actionText: String = "See All",
+    actionText: String? = null,
     modifier: Modifier = Modifier,
+    scaleImg: Float = 1f,
     onActionClick: () -> Unit = {},
     onItemClick: (Any) -> Unit = {}
 ) {
@@ -40,7 +41,7 @@ fun NewsSection(
             }
 
             items(newsItems, key = { it.id }) { news ->
-                NewsCard(newsItem = news, onClick = onItemClick)
+                NewsCard(newsItem = news, onClick = onItemClick, scaleImg = scaleImg)
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -28,6 +29,8 @@ import com.ar.farmguard.home.presentation.components.HomeTopBar
 import com.ar.farmguard.home.presentation.components.KeyUpdateItem
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.PermissionViewModel
+import com.ar.farmguard.news.domian.model.Headline
+import com.ar.farmguard.news.presentation.components.BreakingNewsTicker
 import com.ar.farmguard.news.presentation.components.NewsSection
 import com.ar.farmguard.weather.presentation.components.CurrentWeatherCard
 import dev.icerock.moko.permissions.PermissionState
@@ -65,29 +68,21 @@ fun HomeScreen(
         }
     }
 
-    val newsList = listOf(
-        "Rain expected in northern regions tomorrow.",
-        "Government announces new crop insurance scheme.",
-        "Wheat prices increase by 10% this season.",
-        "New subsidies available for solar pumps."
-    )
-
     val userName by remember{ mutableStateOf("Ajay Singh") }
 
 
     Surface {
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                ,
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 
-            item {
+            item(key = "TopSpacer") {
                 Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
             }
 
-            item {
+            item(key = "TopHomeBar") {
                 HomeTopBar(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     userName = userName,
@@ -98,7 +93,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(10.dp))
             }
 
-            item{
+            item(key = "TodayWeather"){
                 ContentTitle(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     title = "Today's Weather"
@@ -119,20 +114,24 @@ fun HomeScreen(
                 }
             }
 
-            item {
-                ContentTitle(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    title = "Key Updates"
-                ) {
-                    newsList.forEach {
-                        KeyUpdateItem(it) {}
-                    }
-                }
-            }
+//            item(key = "keyUpdates") {
+//                ContentTitle(
+//                    modifier = Modifier.padding(horizontal = 16.dp),
+//                    title = "Key Updates"
+//                ) {
+//                    newsList.forEach {
+//                        KeyUpdateItem(it) {}
+//                    }
+//
+//                }
+//            }
 
-            item {
+
+            item(key = "MandiBhav") {
                 ContentTitle(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
                     title = "Mandi Bhav Updates"
                 ) {
                     CropCard(
@@ -147,16 +146,59 @@ fun HomeScreen(
                 }
             }
 
-            item {
-                NewsSection(
-                    newsItems = homeState.stateNews,
-                    title = "State News",
-                    onItemClick = navigate,
-                    onActionClick = { TODO() }
+            item(key = "BreakingNews") {
+                if(homeState.breakingNewsList.isNotEmpty()){
+                    ContentTitle(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                        title = "Breaking News"
+                    ){
+                        BreakingNewsTicker(
+                            newsList = homeState.breakingNewsList,
+                            modifier = Modifier
+                        )
+                    }
+                }
+            }
+
+            item(key = "Top 10 HeadLines") {
+                if(homeState.headlines.isNotEmpty()){
+                    ContentTitle(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .animateItem(),
+                        title = "Top 10 HeadLines"
+                    )
+                }
+            }
+
+            items(homeState.headlines, key = {it.id}){ headline ->
+                KeyUpdateItem(
+                    newsTitle = headline.title,
+                    image = headline.image,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .animateItem(),
+                    onNewsClick = {}
                 )
             }
 
-            item { Spacer(Modifier.height(120.dp)) }
+
+
+            item(key = "StateNews") {
+                NewsSection(
+                    newsItems = homeState.stateNews,
+                    title = "State News",
+                    scaleImg = 1.2f,
+                    actionText = "See All",
+                    onActionClick = { TODO() },
+                    onItemClick = navigate,
+                    modifier = Modifier.animateItem()
+                )
+            }
+
+            item(key = "BottomSpacer"){ Spacer(Modifier.height(120.dp)) }
         }
     }
 }

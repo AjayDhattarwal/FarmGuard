@@ -1,5 +1,7 @@
 package com.ar.farmguard.home.domain.model
 
+import com.ar.farmguard.news.domian.model.BreakingNews
+import com.ar.farmguard.news.domian.model.Headline
 import com.ar.farmguard.news.domian.model.NewsItem
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.Message
 import com.ar.farmguard.weather.domain.models.response.CurrentWeather
@@ -12,5 +14,7 @@ data class HomeState(
     val isWeatherLoading: Boolean = false,
     val message: Message? = null,
     val location: LocationInfo = LocationInfo(),
-    val stateNews: List<NewsItem> = emptyList()
+    val stateNews: List<NewsItem> = emptyList(),
+    val breakingNewsList: List<BreakingNews> = emptyList(),
+    val headlines: List<Headline> = emptyList()
 )

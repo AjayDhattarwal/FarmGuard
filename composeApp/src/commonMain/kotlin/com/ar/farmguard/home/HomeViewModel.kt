@@ -22,8 +22,10 @@ import com.ar.farmguard.weather.domain.models.response.CurrentWeather
 import com.ar.farmguard.weather.domain.models.response.LocationInfo
 import com.ar.farmguard.weather.domain.models.response.forecast.ForecastAstro
 import com.ar.farmguard.weather.domain.repository.WeatherRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -59,9 +61,16 @@ class HomeViewModel(
 
 
     init {
-        if(currentWeather.value == null){
-            getWeather()
-            getStateNews("haryana")
+        viewModelScope.launch {
+            val weatherDeferred = async(Dispatchers.IO) { if (currentWeather.value == null) getWeather() }
+            val newsDeferred = async(Dispatchers.IO) { getStateNews("haryana") }
+            val breakingNewsDeferred = async(Dispatchers.IO) { getBreakingNews() }
+            val headlinesDeferred = async(Dispatchers.IO) { getTopHeadlines() }
+
+            weatherDeferred.await()
+            newsDeferred.await()
+            breakingNewsDeferred.await()
+            headlinesDeferred.await()
         }
     }
 
@@ -148,6 +157,7 @@ class HomeViewModel(
         }
     }
 
+
     private suspend fun getCoordinates(): String? {
         return withContext(Dispatchers.IO){
             dataSore.data.first()[coordinateKey]
@@ -172,6 +182,43 @@ class HomeViewModel(
                             )
                         )
 
+                    }
+            }
+        }
+    }
+
+    private fun getBreakingNews(
+        tryCount: Int = 0
+    ){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                newsRepository.getBreakingNews()
+                    .onSuccess {
+                        _homeState.value = _homeState.value.copy(
+                            breakingNewsList = it
+                        )
+                    }.onError {
+                        if(tryCount < 3){
+                            getBreakingNews()
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun getTopHeadlines(tryCount: Int = 0){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                newsRepository.getTopHeadlines()
+                    .onSuccess {
+                        _homeState.value = _homeState.value.copy(
+                            headlines = it
+                        )
+                    }
+                    .onError{
+                        if(tryCount < 3){
+                            getTopHeadlines()
+                        }
                     }
             }
         }
