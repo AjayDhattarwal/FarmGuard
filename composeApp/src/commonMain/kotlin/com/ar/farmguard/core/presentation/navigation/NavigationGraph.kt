@@ -34,6 +34,7 @@ import com.ar.farmguard.marketprice.presentation.SharedCommodityViewModel
 import com.ar.farmguard.marketprice.presentation.commodity_details.CommodityDetails
 import com.ar.farmguard.marketprice.presentation.market_home.MarketPrice
 import com.ar.farmguard.news.presentation.news_details.NewsDetailsScreen
+import com.ar.farmguard.news.presentation.state_news.StateNewsScreen
 import com.ar.farmguard.services.common.presentation.Services
 import com.ar.farmguard.services.insurance.CropInsuranceScreen
 import com.ar.farmguard.services.insurance.auth.login.LoginScreen
@@ -117,6 +118,13 @@ fun NavGraphBuilder.homeGraph(appController: FarmGuardController){
                 navigate = appController::navigate
             )
 
+        }
+
+        composable<HomeDestination.StateNews> {
+            StateNewsScreen(
+                onBackPress = appController::upPress,
+                navigate = appController::navigate
+            )
         }
     }
 }

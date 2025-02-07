@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.ar.farmguard.core.presentation.shared.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -29,7 +30,7 @@ fun TopBar(
     actions: @Composable RowScope.() -> Unit = {}
 ){
     TopAppBar(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         title = {
             Text(text = title)
         },

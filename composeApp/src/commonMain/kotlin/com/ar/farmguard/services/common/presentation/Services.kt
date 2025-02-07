@@ -52,10 +52,10 @@ fun Services(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
 
             ContentTitle(
                 title = "Service's",
+                isAsTopBar = true,
                 icon = {
                     IconThemeButton(
                         icon = Icons.Default.Settings,

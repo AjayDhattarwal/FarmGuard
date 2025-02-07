@@ -64,13 +64,10 @@ fun MarketPrice(
             state = lazyColumnState,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            item {
-                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
-            }
-
             item(key = "title") {
                 ContentTitle(
                     title = "Market Price",
+                    isAsTopBar = true,
                     icon = {
                         IconThemeMenuButton(
                             dropDownMenuOptions = listOf("Change mandi"),

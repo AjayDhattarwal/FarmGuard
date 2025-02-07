@@ -9,7 +9,7 @@ import com.ar.farmguard.weather.domain.models.response.LocationInfo
 import com.ar.farmguard.weather.domain.models.response.forecast.ForecastAstro
 
 data class HomeState(
-    val currentWeather: CurrentWeather = CurrentWeather(),
+    val currentWeather: CurrentWeather? = null,
     val astro: ForecastAstro = ForecastAstro(),
     val isWeatherLoading: Boolean = false,
     val message: Message? = null,

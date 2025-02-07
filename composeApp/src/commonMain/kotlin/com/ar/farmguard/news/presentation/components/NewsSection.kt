@@ -3,6 +3,8 @@ package com.ar.farmguard.news.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -41,7 +43,14 @@ fun NewsSection(
             }
 
             items(newsItems, key = { it.id }) { news ->
-                NewsCard(newsItem = news, onClick = onItemClick, scaleImg = scaleImg)
+                NewsCard(
+                    newsItem = news,
+                    onClick = onItemClick,
+                    scaleImg = scaleImg,
+                    modifier = Modifier
+                        .width(260.dp)
+                        .height(170.dp)
+                )
             }
         }
     }

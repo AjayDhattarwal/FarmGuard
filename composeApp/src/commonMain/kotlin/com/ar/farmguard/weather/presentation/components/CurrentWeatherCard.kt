@@ -32,7 +32,7 @@ import farmguard.composeapp.generated.resources.ic_wind_direction
 @Composable
 fun CurrentWeatherCard(
     modifier: Modifier = Modifier,
-    currentWeather: CurrentWeather,
+    currentWeather: CurrentWeather = CurrentWeather(),
     astro: ForecastAstro,
     onClick: () -> Unit = {},
     isBlurEffect: Boolean = false

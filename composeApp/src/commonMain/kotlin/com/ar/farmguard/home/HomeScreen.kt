@@ -29,9 +29,11 @@ import com.ar.farmguard.home.presentation.components.HomeTopBar
 import com.ar.farmguard.home.presentation.components.KeyUpdateItem
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.PermissionViewModel
+import com.ar.farmguard.core.presentation.navigation.HomeDestination
 import com.ar.farmguard.news.domian.model.Headline
 import com.ar.farmguard.news.presentation.components.BreakingNewsTicker
 import com.ar.farmguard.news.presentation.components.NewsSection
+import com.ar.farmguard.weather.domain.models.response.CurrentWeather
 import com.ar.farmguard.weather.presentation.components.CurrentWeatherCard
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
@@ -95,13 +97,13 @@ fun HomeScreen(
 
             item(key = "TodayWeather"){
                 ContentTitle(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).animateItem(),
                     title = "Today's Weather"
                 ){
                     Box(contentAlignment = Alignment.Center){
 
                         CurrentWeatherCard(
-                            currentWeather = homeState.currentWeather,
+                            currentWeather = homeState.currentWeather ?: CurrentWeather(),
                             onClick = {},
                             astro = homeState.astro,
                             isBlurEffect = homeState.isWeatherLoading
@@ -190,9 +192,8 @@ fun HomeScreen(
                 NewsSection(
                     newsItems = homeState.stateNews,
                     title = "State News",
-                    scaleImg = 1.2f,
                     actionText = "See All",
-                    onActionClick = { TODO() },
+                    onActionClick = { navigate(HomeDestination.StateNews) },
                     onItemClick = navigate,
                     modifier = Modifier.animateItem()
                 )

@@ -23,6 +23,7 @@ import com.ar.farmguard.news.data.repository.NewsRepositoryImpl
 import com.ar.farmguard.news.domian.network.NewsApi
 import com.ar.farmguard.news.domian.repository.NewsRepository
 import com.ar.farmguard.news.presentation.news_details.NewsDetailsViewModel
+import com.ar.farmguard.news.presentation.state_news.StateNewsViewModel
 import com.ar.farmguard.services.insurance.calculator.data.network.PremiumCalculatorApi
 import com.ar.farmguard.services.insurance.calculator.data.repository.PremiumCalculatorRepositoryImpl
 import com.ar.farmguard.services.insurance.calculator.domain.repository.PremiumCalculatorRepository
@@ -104,5 +105,6 @@ val sharedModule = module {
     viewModelOf(::SchemeViewModel)
     viewModelOf(::SchemeDetailsViewModel)
     viewModelOf(::NewsDetailsViewModel)
+    viewModelOf(::StateNewsViewModel)
 
 }

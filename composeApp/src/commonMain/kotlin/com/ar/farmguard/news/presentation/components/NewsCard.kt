@@ -34,12 +34,11 @@ import com.ar.farmguard.news.domian.model.NewsItem
 fun NewsCard(
     newsItem: NewsItem,
     scaleImg: Float,
-    onClick: (Any) -> Unit = {}
+    onClick: (Any) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .width(260.dp)
-            .height(170.dp)
+        modifier = modifier
             .clickWithoutRipple{
                 onClick(
                     HomeDestination.NewsDetails(

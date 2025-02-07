@@ -35,6 +35,9 @@ sealed class HomeDestination {
         val title: String,
         val image: String,
     ) : HomeDestination()
+
+    @Serializable
+    data object StateNews: HomeDestination()
 }
 
 

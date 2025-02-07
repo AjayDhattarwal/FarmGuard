@@ -22,7 +22,6 @@ import com.ar.farmguard.weather.domain.models.response.CurrentWeather
 import com.ar.farmguard.weather.domain.models.response.LocationInfo
 import com.ar.farmguard.weather.domain.models.response.forecast.ForecastAstro
 import com.ar.farmguard.weather.domain.repository.WeatherRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
@@ -30,39 +29,21 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-
+import kotlinx.coroutines.flow.asStateFlow
 class HomeViewModel(
     private val locationProvider: LocationProvider,
     private val dataSore: DataStore<Preferences>,
     private val weatherRepository: WeatherRepository,
     private val newsRepository: NewsRepository
 ) : ViewModel() {
-
-    val l = Logger.withTag("HomeViewModel")
-
     private val coordinateKey = stringPreferencesKey(COORDINATES_KEY)
-
-    private val currentWeather = weatherRepository.forecast
-
 
 
     private val _homeState = MutableStateFlow(HomeState())
-    val homeState = _homeState.combine(currentWeather) { state, currentWeather ->
-        state.copy(
-            currentWeather = currentWeather?.current ?: CurrentWeather(),
-            location = currentWeather?.location ?: LocationInfo(),
-            astro = currentWeather?.forecast?.forecastData?.first()?.astro ?: ForecastAstro()
-        )
-
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), HomeState())
-
-
+    val homeState = _homeState.asStateFlow()
     init {
         viewModelScope.launch {
-            val weatherDeferred = async(Dispatchers.IO) { if (currentWeather.value == null) getWeather() }
+            val weatherDeferred = async(Dispatchers.IO) { if (_homeState.value.currentWeather == null) getWeather() }
             val newsDeferred = async(Dispatchers.IO) { getStateNews("haryana") }
             val breakingNewsDeferred = async(Dispatchers.IO) { getBreakingNews() }
             val headlinesDeferred = async(Dispatchers.IO) { getTopHeadlines() }
@@ -86,7 +67,7 @@ class HomeViewModel(
                             status = MessageStatus.ERROR
                         )
                     )
-                    if(currentWeather.value == null) {
+                    if(_homeState.value.currentWeather == null) {
                         fetchWeatherData(null)
                     }
                 }else{
@@ -95,7 +76,7 @@ class HomeViewModel(
 
                     setCoordinates(coordinates)
 
-                    if(currentWeather.value == null) {
+                    if(_homeState.value.currentWeather == null) {
                         fetchWeatherData(coordinates)
                     }
                 }
@@ -129,7 +110,11 @@ class HomeViewModel(
                             coordinate = it,
                         ).onSuccess { data ->
                             _homeState.value = _homeState.value.copy(
-                                isWeatherLoading = false
+                                isWeatherLoading = false,
+                                currentWeather = data.current ?: CurrentWeather(),
+                                location = data.location ?: LocationInfo(),
+                                astro = data.forecast?.forecastData?.first()?.astro ?: ForecastAstro()
+
                             )
                         }.onError {
                             _homeState.value = _homeState.value.copy(

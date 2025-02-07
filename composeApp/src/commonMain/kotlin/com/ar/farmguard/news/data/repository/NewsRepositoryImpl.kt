@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
 import com.ar.farmguard.core.domain.map
+import com.ar.farmguard.core.domain.onSuccess
 import com.ar.farmguard.core.presentation.formatDateTimeFromString
 import com.ar.farmguard.news.domian.model.BreakingNews
 import com.ar.farmguard.news.domian.model.Headline
@@ -15,6 +16,9 @@ import com.ar.farmguard.news.domian.network.NewsApi
 import com.ar.farmguard.news.domian.repository.NewsRepository
 import com.ar.farmguard.news.domian.toNewsItemList
 import kotlin.random.Random
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 
 class NewsRepositoryImpl(
     private val newsApi: NewsApi
@@ -22,13 +26,16 @@ class NewsRepositoryImpl(
 
     private val l = Logger.withTag("NewsRepository")
 
+    private val _stateNews = MutableStateFlow<List<NewsItem>>(emptyList())
+    override val stateNews =  _stateNews.asStateFlow()
+
     override suspend fun getStateNews(
         state: String
     ): Result<List<NewsItem>, DataError.Remote> {
-        val result = newsApi.getStateNews(state).map {
+        return newsApi.getStateNews(state).map {
             it.toNewsItemList()
-        }
-        return result
+        }.onSuccess { _stateNews.value = it }
+
     }
 
     override suspend fun getNewsDetails(shortTag: String): Result<NewsDetails, DataError.Remote> {
