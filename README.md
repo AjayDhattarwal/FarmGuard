@@ -53,14 +53,56 @@ If you are an organization or individual who wishes to have your data removed, p
 - **Cross-Platform:** Developed for both **iOS** and **Android**.
 
 
+## Screenshots
+
+### iOS Samples
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/ios_screenshots/Screenshot_1.png" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/ios_screenshots/Screenshot_2.png" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/ios_screenshots/Screenshot_3.png" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/ios_screenshots/Screenshot_4.png" width="200" />
+</p>
+
+### Android Samples
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_1.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_2.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_3.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_4.jpeg" width="200" />
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_5.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_6.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_7.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_8.jpeg" width="200" />
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_9.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_10.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_11.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_12.jpeg" width="200" />
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_13.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_14.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_15.jpeg" width="200" />
+  <img src="https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/assets/screenshots/Screenshot_16.jpeg" width="200" />
+</p>
+
+
 ## Download FarmGuard
 
 Download the installation files directly for your platform:
 
-[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-lightgray)](#)  
+[![Download Android APK](https://img.shields.io/badge/Download-Android%20APK-green)](https://raw.githubusercontent.com/AjayDhattarwal/FarmGuard/refs/heads/main/composeApp/release/composeApp-release.apk)  
 [![Download iOS File](https://img.shields.io/badge/Download-iOS%20File-lightgray)](#)
 
-**Note: Download links will be available soon.**
+**Note: Download links will be available soon for IOS.**
 
 
 
