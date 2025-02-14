@@ -6,6 +6,8 @@ import com.ar.farmguard.services.scheme.domain.model.SchemeDetails
 
 interface SchemeDetailsApi {
 
-    suspend fun getSchemeDetails(id: String): Result<SchemeDetails, DataError.Remote>
+    suspend fun getSchemeDetails(id: String, buildID: String): Result<SchemeDetails, DataError.Remote>
+
+    suspend fun fetchBuildID(): Result<String, DataError.Remote>
 
 }

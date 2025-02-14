@@ -72,8 +72,7 @@ fun SchemeScreen(
             }
             items(schemeList.itemCount, key = { it }){ index ->
 
-                schemeList.get(index)?.let { scheme ->
-
+                schemeList[index]?.let { scheme ->
                     ContentCard(
                         modifier = Modifier.animateItem(),
                         onClick = {
@@ -94,7 +93,7 @@ fun SchemeScreen(
                                     text = name,
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     overflow = TextOverflow.Ellipsis
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -109,7 +108,7 @@ fun SchemeScreen(
                                     text = scheme.fields.briefDescription ?: "No Description",
                                     style = MaterialTheme.typography.labelMedium,
 
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(0.8f),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.8f),
                                     overflow = TextOverflow.Ellipsis,
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))

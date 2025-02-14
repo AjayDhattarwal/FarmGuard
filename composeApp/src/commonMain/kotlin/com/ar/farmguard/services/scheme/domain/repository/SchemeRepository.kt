@@ -12,4 +12,6 @@ interface SchemeRepository {
         size: Int = 20,
         lang: String = "en",
     ): Result<SchemeResponse, DataError>
+
+
 }

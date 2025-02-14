@@ -1,8 +1,16 @@
 package com.ar.farmguard.services.scheme.presentation
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.ar.farmguard.app.utils.SCHEME_KEY
 import com.ar.farmguard.core.domain.PaginationManager
 import com.ar.farmguard.core.domain.onError
 import com.ar.farmguard.core.domain.onSuccess
@@ -14,10 +22,13 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class SchemeViewModel(
     private val schemeRepository: SchemeRepository,
-    private val paginationManager: PaginationManager
+    private val paginationManager: PaginationManager,
+    private val dataStore: DataStore<Preferences>,
 ): ViewModel() {
 
     private val _isRefreshing = MutableStateFlow(false)
@@ -31,6 +42,7 @@ class SchemeViewModel(
 
     private val _schemeState = MutableStateFlow(SchemeState())
     val schemeState = _schemeState.asStateFlow()
+
 
 
 

@@ -2,6 +2,7 @@ package com.ar.farmguard.services.scheme.data.network
 
 import com.ar.farmguard.app.utils.MY_SCHEME_BASE_URL
 import com.ar.farmguard.app.utils.MY_SCHEME_KEY
+import com.ar.farmguard.app.utils.MY_SCHEME_URL
 import com.ar.farmguard.core.data.safeCall
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
@@ -11,10 +12,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
-import io.ktor.http.encodeURLParameter
-import io.ktor.http.encodeURLQueryComponent
-import kotlinx.serialization.json.Json
-import okio.ByteString.Companion.encodeUtf8
+import io.ktor.client.statement.bodyAsText
 
 class SchemeApiImpl(
     private val httpClient: HttpClient
@@ -52,5 +50,7 @@ class SchemeApiImpl(
             }
         }
     }
+
+
 
 }

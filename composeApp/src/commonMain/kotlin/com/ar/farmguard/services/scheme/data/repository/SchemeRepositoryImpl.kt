@@ -2,6 +2,7 @@ package com.ar.farmguard.services.scheme.data.repository
 
 import com.ar.farmguard.core.domain.DataError
 import com.ar.farmguard.core.domain.Result
+import com.ar.farmguard.core.domain.map
 import com.ar.farmguard.services.scheme.domain.model.SchemeResponse
 import com.ar.farmguard.services.scheme.domain.network.SchemeApi
 import com.ar.farmguard.services.scheme.domain.repository.SchemeRepository
@@ -23,4 +24,7 @@ class SchemeRepositoryImpl(
             lang = lang
         )
     }
+
+
+
 }
