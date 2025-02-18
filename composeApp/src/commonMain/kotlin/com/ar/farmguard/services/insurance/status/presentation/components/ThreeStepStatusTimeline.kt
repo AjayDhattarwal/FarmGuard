@@ -17,21 +17,29 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ThreeStepStatusTimeline(
-    applicationStatus: String,
-    paymentStatus: String,
-    finalStatus: String
+    currentStatus: String?
 ) {
+
+    val statusIndex = when(currentStatus){
+        "APPROVED" -> 2
+        "PAID" -> 1
+        "UNPAID" -> 0
+        else -> - 1
+    }
+
+
     val steps = listOf(
-        "Application\nSubmission" to applicationStatus,
-        "Payment" to paymentStatus,
-        "Status" to finalStatus
+        "Application\nSubmission",
+        "Payment",
+        "Status"
     )
+
 
     Row(
         modifier = Modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        steps.forEachIndexed { index, (label, status) ->
+        steps.forEachIndexed { index, label ->
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -42,7 +50,8 @@ fun ThreeStepStatusTimeline(
                         modifier = Modifier.weight(1f).offset {
                             IntOffset(x= 0 , y = -50)
                         },
-                        status = status
+                        status = if(statusIndex >= index) "done"  else if(statusIndex == -1 ) "cancelled" else "pending"
+
                     )
                 }
                 Column(
@@ -50,7 +59,7 @@ fun ThreeStepStatusTimeline(
                     modifier = Modifier.weight(1f)
                 ) {
                     StatusBall(
-                        status = status
+                        status = if(statusIndex >= index) "done"  else if(statusIndex == -1 ) "cancelled" else "pending"
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

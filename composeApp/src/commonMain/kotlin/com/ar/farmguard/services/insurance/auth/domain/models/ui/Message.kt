@@ -38,7 +38,8 @@ enum class MessageKey {
     SSSY_LIST_INFO,
     MARKET_HOME_INFO,
     FORECAST_INFO,
-    NEWS_INFO
+    NEWS_INFO,
+    POLICY_LIST_STATE
 
 }
 

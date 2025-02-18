@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +19,11 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,11 +33,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ar.farmguard.core.presentation.shared.components.ContentTitle
+import com.ar.farmguard.services.scheme.presentation.components.CommonApplicationUI
 import com.ar.farmguard.services.scheme.presentation.components.CommonContentUI
+import com.ar.farmguard.services.scheme.presentation.components.freqAskQuestionUI
+import farmguard.composeapp.generated.resources.Res
+import farmguard.composeapp.generated.resources.ic_help
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -153,6 +164,47 @@ fun SchemeDetails(
                             title = "Documents Required",
                         ){
                             CommonContentUI(it)
+                        }
+                    }
+
+                    commonEn?.applicationProcess?.let {
+                        ContentTitle(
+                            title = "Documents Required",
+                        ){
+                            CommonApplicationUI(it)
+                        }
+                    }
+
+                    state.schemeDetails.pageProps?.faqs?.data?.en.let{
+                        ContentTitle(
+                            title = "Frequently Asked Questions",
+                        ){
+                            freqAskQuestionUI(it?.faqs)
+                        }
+                    }
+
+                    commonEn?.schemeContent?.references?.let{
+                        ContentTitle(
+                            title = "Sources And References",
+                        ){
+                            it.forEach {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+                                ) {
+                                    Text(
+                                       text = it.title,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.weight(1f),
+                                        color = Color(0xFF3366CC)
+                                    )
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_help),
+                                        contentDescription = "info",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
                         }
                     }
 

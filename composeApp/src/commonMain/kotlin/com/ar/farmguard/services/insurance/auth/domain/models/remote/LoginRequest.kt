@@ -17,14 +17,14 @@ data class LoginData(
 @Serializable
 data class LoginResponse(
     val status: Boolean = false,
-    val error: String = "",
+    val error: String? = null,
     val user: UserData? = null,
     val data: SuccessLoginData? = null
 )
 
 @Serializable
 data class SuccessLoginData(
-    val userData: LoginDataResponse,
+    val userData: LoginDataResponse? = null,
     val token: String,
     val application: Application,
     val sessionTTL: String ? = null,

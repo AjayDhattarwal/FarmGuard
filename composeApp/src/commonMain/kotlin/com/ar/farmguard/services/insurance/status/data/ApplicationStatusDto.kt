@@ -2,6 +2,7 @@ package com.ar.farmguard.services.insurance.status.data
 
 import com.ar.farmguard.services.insurance.status.domain.models.ApplicationStatusData
 import com.ar.farmguard.services.insurance.status.domain.models.ApplicationStatusResponse
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ListSerializer
@@ -63,6 +64,7 @@ class ApplicationStatusDto: KSerializer<ApplicationStatusResponse> {
         )
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: ApplicationStatusResponse) = encoder.encodeStructure(
         descriptor
     ) {

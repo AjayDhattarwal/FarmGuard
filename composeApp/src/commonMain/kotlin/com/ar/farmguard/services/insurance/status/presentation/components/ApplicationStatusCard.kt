@@ -84,10 +84,9 @@ fun ApplicationStatusCard(applicationStatusData: ApplicationStatusData) {
             Spacer(modifier = Modifier.height(8.dp))
 
             ThreeStepStatusTimeline(
-                applicationStatus = "done",
-                paymentStatus = "done",
-                finalStatus = "cancelled"
+                currentStatus = applicationStatusData.policyStatus.toString()
             )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(

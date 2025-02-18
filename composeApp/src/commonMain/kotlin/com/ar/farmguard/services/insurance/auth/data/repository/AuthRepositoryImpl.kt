@@ -134,7 +134,6 @@ class AuthRepositoryImpl(
         }
     }
 
-
     override suspend fun verifyOtp(phoneNumber: Long, otp: Long, verifyOnly: Boolean): Pair<Boolean, Message> = withContext(Dispatchers.IO) {
         return@withContext try {
 
@@ -157,9 +156,9 @@ class AuthRepositoryImpl(
 
                 l.i("$loginResponse")
 
-                val user = loginResponse.user
+                val user = loginResponse.data
 
-                val message = if(user?.status == true){
+                val message = if(user?.userData != null){
                     Message(
                         key = MessageKey.OTP_INFO,
                         string = "Otp Verification Success ",
@@ -168,12 +167,12 @@ class AuthRepositoryImpl(
                 }else{
                     Message(
                         key = MessageKey.OTP_INFO,
-                        string = user?.error ?: "Otp Verification Failed",
+                        string = loginResponse.error ?: loginResponse.user?.error ,
                         status = MessageStatus.ERROR
                     )
                 }
 
-                Pair(user?.status==true, message)
+                Pair(user?.userData?.farmerID != null, message)
 
             }else{
                 val message = Message(

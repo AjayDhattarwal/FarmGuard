@@ -4,11 +4,11 @@ import com.ar.farmguard.app.networking.HttpClientFactory
 import com.ar.farmguard.services.insurance.auth.data.network.AuthService
 import com.ar.farmguard.services.insurance.auth.domain.repository.AuthRepository
 import com.ar.farmguard.services.insurance.auth.data.repository.AuthRepositoryImpl
-import com.ar.farmguard.services.insurance.auth.login.LoginViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.AccountViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.ResidentialViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.FarmerViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.login.LoginViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.AccountViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.ResidentialViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.FarmerViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.app.presentation.theme.PlatformViewModel
 import com.ar.farmguard.core.domain.PaginationManager
 import com.ar.farmguard.home.HomeViewModel
@@ -24,6 +24,11 @@ import com.ar.farmguard.news.domian.network.NewsApi
 import com.ar.farmguard.news.domian.repository.NewsRepository
 import com.ar.farmguard.news.presentation.news_details.NewsDetailsViewModel
 import com.ar.farmguard.news.presentation.state_news.StateNewsViewModel
+import com.ar.farmguard.services.insurance.applications.data.network.UserApplicationsApiImpl
+import com.ar.farmguard.services.insurance.applications.data.respostory.UserApplicationsRepositoryImpl
+import com.ar.farmguard.services.insurance.applications.domain.network.UserApplicationsApi
+import com.ar.farmguard.services.insurance.applications.domain.repostory.UserApplicationsRepository
+import com.ar.farmguard.services.insurance.applications.presentation.ApplicationsViewModel
 import com.ar.farmguard.services.insurance.calculator.data.network.PremiumCalculatorApi
 import com.ar.farmguard.services.insurance.calculator.data.repository.PremiumCalculatorRepositoryImpl
 import com.ar.farmguard.services.insurance.calculator.domain.repository.PremiumCalculatorRepository
@@ -89,6 +94,9 @@ val sharedModule = module {
     singleOf(::NewsApiImpl).bind<NewsApi>()
     singleOf(::NewsRepositoryImpl).bind<NewsRepository>()
 
+    singleOf(::UserApplicationsApiImpl).bind<UserApplicationsApi>()
+    singleOf(::UserApplicationsRepositoryImpl).bind<UserApplicationsRepository>()
+
 
     viewModelOf(::PlatformViewModel)
     viewModelOf(::FarmerViewModel)
@@ -106,5 +114,6 @@ val sharedModule = module {
     viewModelOf(::SchemeDetailsViewModel)
     viewModelOf(::NewsDetailsViewModel)
     viewModelOf(::StateNewsViewModel)
+    viewModelOf(::ApplicationsViewModel)
 
 }

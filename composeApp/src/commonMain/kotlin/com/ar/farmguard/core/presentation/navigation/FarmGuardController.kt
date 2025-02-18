@@ -53,6 +53,14 @@ class FarmGuardController(
         }
     }
 
+    fun navigateWithPOP(route: Any, popUpTo: Any){
+        navController.navigate(route){
+            popUpTo(popUpTo){
+                inclusive = true
+            }
+        }
+    }
+
 
 }
 

@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.ar.farmguard.services.insurance.status.presentation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -38,14 +44,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.ar.farmguard.app.utils.PMFBY_IMG
 import com.ar.farmguard.core.presentation.shared.components.SvgImage
 import com.ar.farmguard.core.presentation.shared.components.TopBar
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.MessageKey
 import com.ar.farmguard.services.insurance.auth.domain.models.ui.MessageStatus
-import com.ar.farmguard.services.insurance.auth.signup.components.LabeledTextField
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.LabeledTextField
 import com.ar.farmguard.services.insurance.status.presentation.components.ApplicationStatusCard
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -54,6 +66,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ApplicationStatus(
     navigate: (Any) -> Unit,
     onBackPress: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     viewModel: ApplicationStatusViewModel = koinViewModel(),
 ) {
     val scrollState = rememberScrollState()
@@ -62,8 +76,6 @@ fun ApplicationStatus(
     val svgData by viewModel.captchaData.collectAsState()
 
     val message by viewModel.message.collectAsState()
-
-
 
     var showResult by remember { mutableStateOf(false) }
 
@@ -83,6 +95,37 @@ fun ApplicationStatus(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            with(sharedTransitionScope){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalPlatformContext.current)
+                            .data(PMFBY_IMG)
+                            .crossfade(true)
+                            .placeholderMemoryCacheKey("image-PMFBY0")
+                            .memoryCacheKey("image-PMFBY0")
+                            .build(),
+                        contentDescription = "PMFBY Logo",
+                        modifier = Modifier.size(150.dp)
+                            .sharedBounds(
+                                sharedTransitionScope.rememberSharedContentState(key = "image-PMFBY0"),
+                                animatedVisibilityScope = animatedContentScope
+                            )
+                    )
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = "PMFBY",
+                        modifier = Modifier.sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "text-PMFBY"),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                    )
+                    Spacer(Modifier.fillMaxWidth().weight(1f))
+                }
+            }
+
             LabeledTextField(
                 value = state.policyId,
                 onValueChange = { newValue ->

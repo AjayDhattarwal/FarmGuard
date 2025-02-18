@@ -39,7 +39,7 @@ import com.ar.farmguard.core.presentation.shared.components.ContentTitle
 import com.ar.farmguard.core.presentation.shared.components.IconThemeButton
 import com.ar.farmguard.core.presentation.shared.components.IconThemeMenuButton
 import com.ar.farmguard.marketprice.domain.model.state.CommodityState
-import com.ar.farmguard.services.insurance.auth.signup.components.SelectorField
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.SelectorField
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

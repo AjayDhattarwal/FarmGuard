@@ -60,8 +60,6 @@ fun CropInsuranceScreen(
         }
     }
 
-    val isFarmerLogin = false
-
     with(sharedTransitionScope) {
 
         Scaffold(
@@ -88,7 +86,11 @@ fun CropInsuranceScreen(
                 ) {
                     Text(
                         text = "PMFBY",
-                        style = MaterialTheme.typography.headlineLarge
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "text-PMFBY"),
+                            animatedVisibilityScope = animatedContentScope
+                        )
                     )
                     Spacer(Modifier.width(5.dp))
 
@@ -118,12 +120,11 @@ fun CropInsuranceScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (isFarmerLogin) {
+                if (isLoggedIn) {
                     Text(
-                        text = if (isLoggedIn) "Welcome, $farmerName" else "Login or Signup",
+                        text = "Welcome, $farmerName",
                         style = MaterialTheme.typography.titleSmall,
                     )
-
                     Spacer(Modifier.height(10.dp))
                 }
 

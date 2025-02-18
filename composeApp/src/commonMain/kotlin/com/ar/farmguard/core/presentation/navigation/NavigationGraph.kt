@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -37,15 +38,16 @@ import com.ar.farmguard.news.presentation.news_details.NewsDetailsScreen
 import com.ar.farmguard.news.presentation.state_news.StateNewsScreen
 import com.ar.farmguard.services.common.presentation.Services
 import com.ar.farmguard.services.insurance.CropInsuranceScreen
-import com.ar.farmguard.services.insurance.auth.login.LoginScreen
-import com.ar.farmguard.services.insurance.auth.signup.components.AccountDetails
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.FarmerViewModel
-import com.ar.farmguard.services.insurance.auth.signup.components.FarmerDetailsForm
-import com.ar.farmguard.services.insurance.auth.signup.components.FarmerID
-import com.ar.farmguard.services.insurance.auth.signup.components.ResidentialDetails
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.AccountViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.ResidentialViewModel
-import com.ar.farmguard.services.insurance.auth.signup.viewmodel.SignUpViewModel
+import com.ar.farmguard.services.insurance.applications.presentation.Application
+import com.ar.farmguard.services.insurance.auth.presentation.login.LoginScreen
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.AccountDetails
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.FarmerViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.FarmerDetailsForm
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.FarmerID
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.ResidentialDetails
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.AccountViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.ResidentialViewModel
+import com.ar.farmguard.services.insurance.auth.presentation.signup.viewmodel.SignUpViewModel
 import com.ar.farmguard.services.insurance.calculator.presentation.PremiumCalculator
 import com.ar.farmguard.services.insurance.status.presentation.ApplicationStatus
 import com.ar.farmguard.services.scheme.presentation.SchemeDetails
@@ -212,11 +214,13 @@ fun NavGraphBuilder.servicesGraph(
             )
         }
         composable<ServiceDestination.Login> {
+            val destination = it.toRoute<ServiceDestination.Login>().destination.toTargetKey()
             LoginScreen(
+                navTarget = destination,
                 sharedTransitionScope = sharedTransitionScope,
                 animatedContentScope = this@composable,
                 onBackPress = appController::upPress,
-                navigate = appController::navigate
+                navigate = appController::navigateWithPOP
             )
         }
 
@@ -232,11 +236,20 @@ fun NavGraphBuilder.servicesGraph(
         composable<ServiceDestination.ApplicationStatus> {
             ApplicationStatus(
                 navigate = appController::navigate,
-                onBackPress = appController::upPress
+                onBackPress = appController::upPress,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable
             )
         }
 
-        composable<ServiceDestination.Applications> {  }
+        composable<ServiceDestination.Applications> {
+            Application(
+                navigate = appController::navigate,
+                onBackPress = appController::upPress,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = this@composable
+            )
+        }
 
         composable<ServiceDestination.Schemes> {
             SchemeScreen(

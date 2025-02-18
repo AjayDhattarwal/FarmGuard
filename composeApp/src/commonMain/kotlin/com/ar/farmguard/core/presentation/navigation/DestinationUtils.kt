@@ -1,5 +1,6 @@
 package com.ar.farmguard.core.presentation.navigation
 
+import androidx.compose.ui.text.style.TextAlign
 import kotlinx.serialization.Serializable
 
 sealed class SubGraph {
@@ -125,4 +126,22 @@ sealed class ServiceDestination{
 @Serializable
 enum class TargetKey {
     HOME,APPLICATIONS,APPLY_INSURANCE,SERVICES
+
+}
+
+fun String.toTargetKey(): TargetKey {
+    return try {
+        TargetKey.valueOf(this)
+    } catch (e: IllegalArgumentException) {
+       TargetKey.SERVICES
+    }
+}
+
+fun TargetKey.toDestination(): Any {
+    return when(this){
+        TargetKey.HOME ->  HomeDestination.Home
+        TargetKey.SERVICES -> ServiceDestination.Services
+        TargetKey.APPLICATIONS -> ServiceDestination.Applications
+        TargetKey.APPLY_INSURANCE -> ServiceDestination.ApplyInsurance
+    }
 }

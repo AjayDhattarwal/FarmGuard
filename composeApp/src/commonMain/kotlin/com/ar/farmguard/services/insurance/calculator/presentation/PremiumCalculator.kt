@@ -27,8 +27,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ar.farmguard.core.presentation.navigation.SubGraph
 import com.ar.farmguard.core.presentation.shared.components.TopBarWithMenu
-import com.ar.farmguard.services.insurance.auth.signup.components.LabeledTextField
-import com.ar.farmguard.services.insurance.auth.signup.components.SelectorField
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.LabeledTextField
+import com.ar.farmguard.services.insurance.auth.presentation.signup.components.SelectorField
 import com.ar.farmguard.services.insurance.calculator.presentation.components.PremiumDetails
 import org.koin.compose.viewmodel.koinViewModel
 

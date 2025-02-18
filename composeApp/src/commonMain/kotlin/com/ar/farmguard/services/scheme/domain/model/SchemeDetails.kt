@@ -63,8 +63,6 @@ data class FaqItem(
 )
 
 
-
-
 @Serializable
 data class SchemeDetailsData(
     @SerialName("_id")

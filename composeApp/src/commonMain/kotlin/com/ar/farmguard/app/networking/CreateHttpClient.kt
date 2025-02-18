@@ -14,8 +14,10 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.compression.ContentEncodingConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.cookies.addCookie
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -30,6 +32,7 @@ import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.charsets.Charsets
 import io.ktor.utils.io.core.toByteArray
+import io.ktor.utils.io.core.use
 import io.ktor.utils.io.toByteArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -41,7 +44,7 @@ import kotlin.coroutines.CoroutineContext
 
 object HttpClientFactory {
 
-    private val cookiesKey = stringPreferencesKey(COOKIE_KEY)
+
 
     private var savedCookie: Cookie? = null
 
@@ -55,10 +58,12 @@ object HttpClientFactory {
                     }
                 )
             }
+
             install(HttpTimeout) {
                 socketTimeoutMillis = 20_000L
                 requestTimeoutMillis = 20_000L
             }
+
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
@@ -67,32 +72,11 @@ object HttpClientFactory {
                 }
                 level = LogLevel.ALL
             }
+
             install(HttpCookies) {
-                storage = object : CookiesStorage {
-                    override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
-                        if (requestUrl.host == INSURANCE_DOMAIN) {
-                            savedCookie = cookie
-                            saveCookie(dataStore, cookieToString(cookie))
-
-                        }
-                    }
-
-                    override suspend fun get(requestUrl: Url): List<Cookie> {
-                        return if (requestUrl.host == INSURANCE_DOMAIN) {
-
-                            val cookieString = savedCookie ?: getCookie(dataStore)?.parseToCookie()
-                            savedCookie = cookieString
-                            listOfNotNull(cookieString)
-
-                        } else {
-                            emptyList()
-                        }
-                    }
-
-
-                    override fun close() {}
-                }
+                storage = PersistentCookieStorage(dataStore)
             }
+
             install(ContentEncoding) {
                 gzip()
                 deflate()
@@ -127,19 +111,6 @@ object HttpClientFactory {
         }
     }
 
-
-
-
-    private suspend fun getCookie(dataStore: DataStore<Preferences>): String? {
-        val preferences = dataStore.data.first()
-        return preferences[cookiesKey]
-    }
-
-    private suspend fun saveCookie(dataStore: DataStore<Preferences>, cookie: String) {
-        dataStore.edit { preferences ->
-            preferences[cookiesKey] = cookie
-        }
-    }
 }
 
 
@@ -183,6 +154,48 @@ fun cookieToString(cookie: Cookie): String {
 
 fun String.toByteReadChannel(): ByteReadChannel {
     return ByteReadChannel(this.toByteArray(Charsets.UTF_8))
+}
+
+
+class PersistentCookieStorage(private val dataStore: DataStore<Preferences>) : CookiesStorage {
+
+    private val cookiesKey = stringPreferencesKey("cookies")
+    private val memoryStorage = AcceptAllCookiesStorage()
+
+    override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
+        if (requestUrl.host.contains(INSURANCE_DOMAIN)) {
+
+            val savedCookies = get(requestUrl).toMutableList()
+
+            savedCookies.removeAll { it.name == cookie.name }
+
+            savedCookies.add(cookie)
+
+            val jsonCookies = Json.encodeToString(savedCookies)
+            dataStore.edit { preferences ->
+                preferences[cookiesKey] = jsonCookies
+            }
+        } else {
+            memoryStorage.addCookie(requestUrl, cookie)
+        }
+    }
+
+    override suspend fun get(requestUrl: Url): List<Cookie> {
+        return if (requestUrl.host.contains(INSURANCE_DOMAIN)) {
+            val preferences = dataStore.data.first()
+            val savedCookies = preferences[cookiesKey] ?: return emptyList()
+
+            return try {
+                Json.decodeFromString(savedCookies)
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            memoryStorage.get(requestUrl)
+        }
+    }
+
+    override fun close() {}
 }
 
 

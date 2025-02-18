@@ -28,15 +28,11 @@ class AuthService(
     private val client: HttpClient
 ){
 
-
     suspend fun fetchLoginState(): HttpResponse{
         return client.post(IS_LOGIN_URL){
             headers{
                 append(HttpHeaders.Accept, "application/json")
-                append(HttpHeaders.Cookie, "connect.sid=s%3AJ1Kzq-CSiMFcf8F7Zk3_8Qpimsu6relw.QWa6p0K5QR12TFkXQt%2Faqv%2F7QnKZyUX7uROt4r7FzuM")
-
             }
-//            setBody("")
         }
     }
 
